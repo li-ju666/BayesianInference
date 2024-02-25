@@ -1,0 +1,13 @@
+\section{Problem 2.2}
+\begin{proof}
+$T(X)$ is sufficient for underlying parameter $\theta$ if $p(X \vert T(X))$, does not depend on $\theta$, formally as $p(X \vert T(X)) = p(X \vert T(X), \theta)$ \citep{wiki:Sufficient_statistic}.
+
+First, we prove that $\pi(\theta \vert X) = \pi(\theta \vert T(X))$ implies $p(X \vert T(X)) = p(X \vert T(X), \theta)$.
+\begin{align*}
+    \pi(\theta \vert X )  &= \pi(\theta \vert T(X))\\
+    \frac{p(X \vert \theta) \pi(\theta)}{p(X)} &= \frac{p(T(X) \vert \theta) \pi(\theta)}{ p(T(X))}\\
+    p(T(X) \vert X) \frac{p(X)}{p(T(X))} &=  \frac{p(X \vert \theta) }{p(T(X) \vert \theta) } p(T(X) \vert X)\\
+    p(X \vert T(X)) &= p(X \vert T(X), \theta)
+\end{align*}
+All steps above are if-and-only-if implications, thus we have also proved that $p(X \vert T(X)) = p(X \vert T(X), \theta)$ implies $\pi(\theta \vert X) = \pi(\theta \vert T(X))$.
+\end{proof}

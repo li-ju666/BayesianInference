@@ -1,0 +1,44 @@
+\section{Problem 2.1}
+With the given $p(x \vert \theta)$ in the table and $p(\theta)$, the joint distribution and marginal distributions of $x$ and $\theta$ are computed as follows and shown in Table \ref{tab:2-1-joint}.
+
+\begin{align*}
+    p(x, \theta) &= p(x \vert \theta) p(\theta) \\
+    p(x) &= \sum_{\theta \in \{0, 1, 2\}} p(x, \theta)
+\end{align*}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{c c c c c c}
+    \toprule
+    & D & C & B & A & $p(\theta)$ \\
+    \midrule
+    $\theta = 0$    & 0.08  & 0.01  & 0.01  & 0      & 0.1 \\
+    $\theta = 1$    & 0.12  & 0.3   & 0.12  & 0.06   & 0.6 \\
+    $\theta = 2$    & 0     & 0.03  & 0.15  & 0.12   & 0.3 \\
+    $p(x)$          & 0.2   & 0.34  & 0.28  & 0.18   &\\
+    \bottomrule
+    \end{tabular}
+    \caption{Joint and marginal distributions of $x$ and $\theta$.}
+    \label{tab:2-1-joint}
+\end{table}
+
+The posterior distribution of $\theta$ given $x$ is computed as follows and shown in Table \ref{tab:2-1-post}.
+
+\begin{equation*}
+    p(\theta \vert x) = \frac{p(x, \theta)}{p(x)}
+\end{equation*}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{c c c c c}
+    \toprule
+    & D & C & B & A \\
+    \midrule
+    $\theta = 0$    & 0.4  & 0.03  & 0.04  & 0     \\
+    $\theta = 1$    & 0.6  & 0.88  & 0.43  & 0.33  \\
+    $\theta = 2$    & 0     & 0.09  & 0.53  & 0.67 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Posterior distribution of $\theta$ given $x$.}
+    \label{tab:2-1-post}
+\end{table}

@@ -1,0 +1,28 @@
+\section{Problem 3.10}
+\paragraph{(a)}
+Given $p(X \vert \theta) = \mathcal{N}(\theta, 1)$, we have
+\begin{align*}
+    V(\theta \vert x) 
+    &= \frac{\partial p(x \vert \theta)}{p(x \vert \theta) \partial \theta}\\
+    &= \frac {\partial -\frac{1}{2}(x - \theta)^2} {\partial \theta}\\
+    &= x - \theta\\
+    I(\theta) 
+    &= -\mathbb{E}_{p(X \vert \theta)} \left[ \frac{\partial V(\theta \vert x)}{\partial \theta}\right]\\
+    &= 1
+\end{align*}
+Thus, Jeffreys prior is given by $\pi_\mathrm{Jeff}(\theta) \propto 1$. Then the corresponding posterior is derived as follows
+\begin{align*}
+    \pi_\mathrm{Jeff} (\theta \vert x)
+    &\propto \pi_\mathrm{Jeff} (\theta) \cdot p(x \vert \theta)\\
+    &\propto \exp \left\{ -\frac{1}{2} (x - \theta)^2 \right\}
+\end{align*}
+It is recognized that the posterior is a Gaussian $\pi_\mathrm{Jeff} (\theta \vert x) = \mathcal{N}(x, 1)$.
+
+\paragraph{(b)}
+% Given that $\pi_\mathrm{Jeff}(\theta) \propto 1$, Jeffreys prior for $\theta \in [-k, k ]$ is given by $\pi^k_\mathrm{Jeff}(\theta) = 1/2k$. The corresponding posterior is derived as follows:
+% \begin{align*}
+%     \pi_\mathrm{Jeff}^k (\theta \vert x)
+%     &\propto \pi_\mathrm{Jeff}^k (\theta) \cdot p(x \vert \theta)\\
+%     &\propto \frac{1}{2k} \exp \left\{ -\frac{1}{2} (x - \theta)^2 \right\}
+% \end{align*}
+% It is recognized that the posterior is a Gaussian $\pi_\mathrm{Jeff}^k (\theta \vert x) = \mathcal{N}(x, 1)$.

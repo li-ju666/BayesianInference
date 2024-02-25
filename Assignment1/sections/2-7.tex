@@ -1,0 +1,47 @@
+\section{Problem 2.7}
+\paragraph{(a)}
+Given $\pi(\mu) = \mathcal{N}(0, 1)$ and $\pi(\theta_i \vert \mu) = \mathcal{N}(\mu, 1)$ for all $i\in\{1, 2, \dots, n\}$, we have
+\begin{align*}
+    \pi(\theta_i) &= \int \pi(\theta_i, \mu) d\mu = \int \pi(\theta_i \vert \mu) \pi(\mu) d\mu \\
+    &= \int \mathcal{N}_{\theta_i} (\mu, 1) \mathcal{N}_{\mu}(0, 1) d\mu \\
+    &\propto \int \exp \left\{ -\frac{1}{2}(\theta_i - \mu)^2 \right\} \exp(-\frac{1}{2} \mu^2)d\mu
+\end{align*}
+We recognize that the integration results in the convolution of two standard Gaussian distribution $\mathcal{N}(0, 1)$. Recall that the convolution of $\mathcal{N}(\mu_1, \sigma_1^2)$ and $\mathcal{N}(\mu_2, \sigma_2^2)$ results $\mathcal{N}(\mu_1+\mu_2, \sigma_1^2 + \sigma^2_2)$, we have $\pi(\theta_i) = \mathcal{N}(0, 2)$. 
+
+Given that $\theta_i$ for all $i\in \{1, 2, \dots, n\}$ are independent, we have the prior distribution
+\begin{equation*}
+    \pi(\bm{\theta}) = \mathcal{N}(\bm{0}, 2\bm{I})
+\end{equation*}
+where $\bm{\theta} = (\theta_1, \theta_2, \dots \theta_n)^\top$.
+
+\paragraph{(b)}
+Let $\bm{X}_i$ denotes $(X_{i, 1}, X_{i, 2}, \dots, X_{i, k})^\top$ for all $i\in \{1, 2, \dots, n\}$. Given $\pi(\theta_i) = \mathcal{N}(0, 2)$ and $p(\bm{X}_i \vert \theta_i) = \prod_{j=1}^{k}\mathcal{N} (\theta_i, 1)$, we have
+\begin{align*}
+    \pi(\theta_i \vert \bm{x})
+    &= \pi(\theta_i \vert \bm{x}_i) = \frac{p(\bm{x}_i \vert \theta_i) \pi(\theta_i)}{ p(\bm{x}_i)} \\
+    &\propto \prod_{j=1}^{k} \exp\left\{ -\frac{1}{2} (\theta_i - x_{i, j})^2\right\} \exp\left\{ -\frac{1}{2} \left( \frac{\theta_i}{2} \right)^2\right\} \\
+    &\propto \exp\left\{ -\frac{(k+1/4)\theta_i^2 - 2\theta_i \sum_{j=1}^{k}x_{i, j}}{2} \right\} \\
+    &\propto \exp\left\{ -\frac{1}{2} \left( \frac{\theta_i - \sum_{j=1}^k \frac{x_{i,j}}{k+1/4}}{\frac{1}{\sqrt{k+1/4}}} \right)^2 \right\}\\
+    \pi(\theta_i \vert \bm{x})
+    &= \mathcal{N}\left( \sum_{j=1}^k \frac{4x_{i, j}}{4k+1}, \frac{4}{4k+1} \right)
+\end{align*}
+Given that $\theta_1, \dots, \theta_n$ are independent, we have
+\begin{align*}
+    \pi(\bm{\theta} \vert \bm{x})
+    &= \prod_{i=1}^n \pi(\theta_i \vert \bm{x})\\
+    &= \mathcal{N}\left( (\mu^p_1, \dots, \mu^p_n)^\top, \frac{4}{1+4k}\bm{I}\right)
+\end{align*}
+where $\mu^p_i = \sum_{j=1}^k \frac{4x_{i,j}}{4k+1}, \forall i \in \{1, \dots, n\}$.
+
+\paragraph{(c)}
+
+Given that $\pi(\theta_i \vert \bm{x}) = \mathcal{N}\left( \sum_{j=1}^k \frac{4x_{i, j}}{4k+1}, \frac{4}{4k+1} \right)$ for all $i\in \{1, \dots, n\}$, we have
+\begin{align*}
+    \pi\left( \frac{\theta_i}{n} \vert \bm{x} \right) = \mathcal{N}\left( \sum_{j=1}^k \frac{4x_{i, j}}{n(4k+1)}, \frac{4}{(4k+1)n^2} \right)
+\end{align*}
+Then for $\hat{\theta} = \sum_{i=1}^n \frac{\theta_i}{n}$, we have
+\begin{align*}
+    \pi\left( \hat{\theta} \vert \bm{x} \right) = \mathcal{N}\left(
+    \sum_{i=1}^{n}\sum_{j=1}^k \frac{4x_{i,j}}{n(4k+1)}, \frac{4}{(4k+1)n}
+    \right)
+\end{align*}

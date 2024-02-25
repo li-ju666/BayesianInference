@@ -1,0 +1,50 @@
+\section{Problem 3.7}
+\paragraph{(a)}
+\begin{align*}
+    p(X \vert \theta) 
+    &\propto \theta^X (1-\theta)^{n-X}\\
+    &= \exp \left\{ X\ln \theta + (n-X) \ln (1-\theta)
+        \right\}\\
+    &= \exp \left\{ X\ln \left( \frac{\theta}{1-\theta} \right) + n\ln(1-\theta)
+        \right\}
+\end{align*}
+Thus, $p(X \vert \theta)$ belongs to the exponential family with the natural parameter $\zeta = \ln \left( \frac{\theta}{1-\theta}\right)$.
+
+\paragraph{(b)}
+\begin{align*}
+    p(X \vert \zeta)
+    &\propto \exp \left\{ \zeta X - \Phi(\zeta)
+        \right\}\\
+    \text{where } \Phi(\zeta)
+    &= n \ln (\exp(\zeta) + 1)
+\end{align*}
+With $\mu, \lambda \in \mathbb{R}$ and $\lambda > 0$, the conjugate family over $\zeta$ is given by
+\begin{align*}
+    \mathcal{F} = \left\{ p(\zeta \vert \mu, \lambda )\right\}
+    &\propto \exp \left\{ \zeta \mu - \lambda \Phi(\zeta)
+        \right\}
+\end{align*}
+
+\paragraph{(c)}
+With the prior $\pi(\zeta \vert \mu, \lambda)$ over $\zeta$, the corresponding posterior over $\zeta$ is
+\begin{align*}
+    \pi(\zeta \vert x)
+    &\propto p(x \vert \zeta) \pi(\zeta)\\
+    &\propto \exp \left\{ \zeta x - \Phi(\zeta) \right\} \cdot \exp \left\{ \zeta \mu - \lambda \Phi(\zeta) \right\} \\
+    &= \exp \left\{ \zeta (\mu+x) - (\lambda+1) n \ln (\exp(\zeta) + 1) \right\}
+\end{align*}
+The equivalent posterior over $\theta$ is 
+\begin{align*}
+    \pi(\theta \vert x)
+    &\propto \exp \left\{ \ln \left(\frac{\theta}{1-\theta}\right) (\mu+x) + (\lambda+1) n \ln (1-\theta) \right\}
+\end{align*}
+
+\paragraph{(d)}
+The conjugate prior $\pi(\theta \vert \mu, \lambda)$ can be reformed as
+\begin{align*}
+    \pi(\theta \vert \mu, \lambda)
+    &\propto  \exp \left\{ \ln \left(\frac{\theta}{1-\theta}\right) \mu + \lambda n \ln (1-\theta) \right\}\\
+    &= \left( \frac{\theta}{1-\theta} \right)^\mu \cdot (1-\theta)^{\lambda n}\\
+    &= \theta^\mu (1-\theta)^{\lambda n - \mu}
+\end{align*}
+It is recognized that the conjugate prior belongs to the Beta distribution family.

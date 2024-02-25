@@ -1,0 +1,82 @@
+\section{Problem 3.4}
+\paragraph{(a)}
+Let $\bm{X} = (X_1, \dots, X_n)^\top$. Given $X_1, \dots, X_n$ are i.i.d and $p(X_i) = \mathrm{Geo}(\theta)$, we have
+\begin{align*}
+    p(\bm{X} \vert \theta) 
+    &= \prod_{i=1}^{n} p(X_i \vert \theta) = \prod_{i_1}^{n} \mathrm{Geo}_{X_i}(\theta)\\
+    &= (1-\theta)^{\sum_{i=1}^{n} X_i} \theta^n\\
+    &= \exp \left\{ \ln (1-\theta) \sum_{i=1}^{n}X_i +n\ln \theta \right\}
+\end{align*}
+Therefore, the sample distribution $p(\bm{X} \vert \theta)$ belongs to exponential family, with natural parameter $\zeta(\theta) = \ln(1-\theta)$ and sufficient statistics $T(\bm{X}) = \sum_{i=1}^{n}X_i$.
+
+\paragraph{(b)}
+We denote the natural parameter with $\zeta = \ln (1-\theta)$, and we can rewrite the probability function as follows
+\begin{equation*}
+    p(\bm{X} \vert \zeta)
+    = \exp \left \{\zeta \sum_{i=1}^{n} X_i - \left( -n\ln (1 - \exp \zeta) \right) \right\}
+\end{equation*}
+Using Theorem 3.3, we have $h(\bm{X} = 1$, $\Phi(\zeta) = -n\ln (1 - \exp \zeta)$. With $\mu, \lambda \in \mathbb{R}$ and $\lambda > 0$, the the conjugate family over $\zeta$ is given by
+\begin{align*}
+    \mathcal{F} = \{ p(\zeta \vert \mu, \lambda) \}
+    &\propto \exp \left\{ \zeta\mu - \lambda \Phi(\zeta) \right\}
+\end{align*}
+
+The equivalent conjugate prior over $\theta$ is given by 
+\begin{align*}
+    \mathcal{F} = \{ p(\theta \vert \mu, \lambda) \}
+    &\propto \exp \left\{\mu \ln (1-\theta) + \lambda n \ln \theta
+        \right\}\\
+    &= \theta ^ {\lambda n} (1-\theta)^\mu 
+\end{align*}
+
+\paragraph{(c)}
+The conjugate family for $\theta$ is the beta distribution family.
+
+\paragraph{(d)}
+With the prior over $\zeta$ as $\pi(\zeta \vert \mu, \lambda)$, the conjugate posterior $\pi(\zeta \vert x_i, \dots, x_n)$ is given by
+\begin{align*}
+    \pi(\zeta \vert x_i, \dots, x_n) 
+    &\propto \pi(\zeta) p(\bm{x} \vert \zeta) \\
+    &=\exp \left\{ \zeta\mu + \lambda n\ln (1 - \exp \zeta) \right\} \cdot
+        \exp \left \{\zeta \sum_{i=1}^{n} x_i + \left( n\ln (1 - \exp \zeta) \right) \right\}\\
+    &= \exp \left\{ \zeta \left(\mu + \sum_{i=1}^{n}x_i \right) + (\lambda + 1)n\ln (1 - \exp \zeta)
+        \right\}
+\end{align*}
+The equivalent posterior over $\theta$ $\pi(\theta \vert x_1, \dots, x_n)$ is given by
+\begin{align*}
+    \pi(\theta \vert x_1, \dots, x_n)
+    \propto \theta^{\lambda n + n} (1-\theta)^{\mu + T(\bm{x})}
+\end{align*}
+where $T(\bm{x}) = \sum_{i=1}^{n} x_i$. By normalizing the distribution, $\pi(\theta \vert x_1, \dots, x_n) = \mathrm{Beta}(\lambda n+n+1, \mu+T(\bm{x})+1)$.
+
+\paragraph{(e)}
+The Fisher information $I(\theta)$ is derived as follows:
+\begin{align*}
+    V(\theta \vert \bm{x})
+    &= \frac{\partial p(\bm{x} \vert \theta)}{p(\bm{x} \vert \theta) \partial \theta}\\
+    &=\frac{T(\bm{x})}{\theta - 1} + \frac{n}{\theta} \\
+    I(\theta) 
+    &= -\mathbb{E}_{p(\bm{X} \vert \theta)} \left[ \frac{\partial V(\theta \vert \bm{x})}{\partial \theta}\right]\\
+    &= \mathbb{E}_{p(\bm{X} \vert \theta)} \left[ \frac{T(\bm{x})}{(1-\theta)^2} + \frac{n}{\theta^2}\right] \\
+    &= \frac{\mathbb{E}[T(\bm{x})]}{(1-\theta)^2} + \frac{n}{\theta^2}
+\end{align*}
+We know that $\mathbb{E}[T(\bm{x})] = \sum_{i=1}^{n} \mathbb{E} [x_i] = n(1-\theta)/\theta$. Thus we have
+\begin{align*}
+    T(\theta) = \frac{n}{\theta (1-\theta)} + \frac{n}{\theta^2} = \frac{n}{\theta^2(1-\theta)}
+\end{align*}
+
+\paragraph{(f)}
+With the Fisher information $I(\theta) = \frac{n}{\theta^2(1-\theta)}$, Jeffreys prior is 
+\begin{align*}
+    \pi_{\mathrm{Jeff}}(\theta)
+    &\propto \sqrt{\det (I(\theta))} = \frac{1}{\theta} \sqrt{\frac{n}{1-\theta}}
+\end{align*}
+
+\paragraph{(g)}
+Jeffreys prior can be reformed as follows
+\begin{align*}
+    \pi_{\mathrm{Jeff}}(\theta)
+    &\propto \frac{1}{\theta} \sqrt{\frac{n}{1-\theta}} \\
+    &\propto \theta^{-1}(1-\theta)^{-1/2}
+\end{align*}
+in a similar form of $\mathrm{Beta}(0, \frac{1}{2})$. Recall that $\mathrm{Beta}(a, b)$ is undefined for $a=0$, Jeffreys prior does not belong to Beta distribution family, implying that it is not a conjugate prior. 

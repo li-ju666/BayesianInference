@@ -1,0 +1,26 @@
+\section{Problem 3.2}
+\paragraph{(a)}
+Given the prior information that the parameter $\mu$ lies symmetrically around 3, the location parameter of the Cauchy prior can be set as $m=3$.
+
+\paragraph{(b)}
+\begin{align*}
+    \Pr(\mu > 10) > 0.3 &\Longrightarrow \mathrm{CDF}(\mu=10) \leq \frac{7}{10}\\
+    \frac{1}{\pi} \arctan &\left( \frac{10 - 3}{\gamma} \right) + \frac{1}{2} \leq \frac{7}{10} \\
+    \gamma &\geq \frac{7}{\tan{\frac{\pi}{5}}} \approx 9.63
+\end{align*}
+For simplicity, we can set $\gamma = 10$ and thus, we have prior for $\mu$ as $\pi(\mu) = \mathcal{C}(3, 10)$.
+
+\paragraph{(c)}
+Notice that the log-normal likelihood function belongs to the exponential family while the Cauchy prior does not, $\pi(\mu) = \mathcal{C}(3, 10)$ is not a conjugate prior.
+
+\paragraph{(d)}
+Given $p(x \vert \mu) = \frac{1}{\sigma x \sqrt{2\pi}} \exp\{-\frac{1}{2\sigma^2} (\ln{x} - \mu)^2 \}$, the score function $V(\mu \vert x)$ and the Fisher information $I(\mu)$ are derived as follows:
+\begin{align*}
+    V(\mu \vert x) 
+    &= \frac{\partial \ln p(x \vert \mu)}{\partial \mu} = \frac{1}{p(x \vert \mu)} \frac{\partial p(x \vert \mu)}{\partial \mu}\\
+    &= \frac{\partial -\frac{1}{2\sigma^2} (\ln x - \mu)^2}{\partial \mu} = \frac{\ln x - \mu}{\sigma^2}\\
+    I(\mu)
+    &= - \mathbb{E}_{p(x \vert \mu)} \left[ \frac{\partial V(\mu \vert x)}{ \partial \mu} \right] \quad \text{(Holds when $\ln p(x \vert \mu)$ is twice differentiable w.r.t $\mu$.)}\\
+    &= \frac{1}{\sigma^2}
+\end{align*}
+Then Jeffreys prior is given by $\pi_{\mathrm{Jeff}}(\mu) \propto \sqrt{\det (I(\mu))} = \frac{1}{\sigma}$.
