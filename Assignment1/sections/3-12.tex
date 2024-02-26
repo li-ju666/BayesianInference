@@ -1,2 +1,83 @@
 \section{Problem 3.12}
 \paragraph{(a)}
+Let $t(\bm{x}) = \sum_{i=1}^{n}x_i$. We have the posterior for $\pi_1(\theta)$ as follows:
+\begin{align*}
+    \pi_1(\theta \vert \bm{x})
+    &\propto p(\bm{x} \vert \theta) \pi_1(\theta) \\
+    &= \prod_{i=1}^{n} p(x_i \vert \theta) \pi_1(\theta) \\
+    &\propto \exp \left \{ \frac{-1}{2\sigma^2}\sum_{i=1}^n (x_i - \theta)^2  \right\}
+        \exp \left\{ -\frac{\theta^2}{2\sigma_0^2}\right\} \\
+    &\propto \exp \left\{ -\frac{1}{2\sigma^2} \left( n\theta^2 - 2t(\bm{x})\theta \right) 
+        -\frac{\theta^2}{2\sigma_0^2} \right\}\\
+    &\propto \exp \left\{ -\frac{1}{2} \frac{\left( \theta - \frac{t(\bm{x})\sigma_0^2}{n\sigma_0^2 + \sigma^2} \right)^2}{\frac{\sigma^2\sigma_0^2}{n\sigma_0^2 + \sigma^2}}
+        \right\}
+\end{align*}
+It is recognized that
+\begin{align*}
+    \pi_1(\theta \vert \bm{x}) = \mathcal{N} \left(
+    \frac{t(\bm{x})} {n + \sigma^2/\sigma_0^2},
+    \left( \frac{1}{\sigma_0^2} + \frac{n}{\sigma^2} \right)^{-1} \right)
+\end{align*}
+
+For $\pi_2(\theta)$, the posterior is derived as
+\begin{align*}
+    \pi_2(\theta \vert \bm{x})
+    &\propto p(\bm{x} \vert \theta) \pi_2(\theta) \\
+    &= \prod_{i=1}^{n} p(x_i \vert \theta) \pi_2(\theta) \\
+    &\propto \exp \left \{ \frac{-1}{2\sigma^2}\sum_{i=1}^n (x_i - \theta)^2  \right\}
+    \exp \left\{ -\frac{(\theta-\mu_0)^2}{2 \lambda \sigma_0^2}\right\} \\
+\end{align*}
+With simplification, the posterior of $\pi_2(\theta)$ is given by
+\begin{align*}
+    \pi_2(\theta \vert \bm{x}) = \mathcal{N} \left(
+    \frac{1}{\frac{1}{\lambda \sigma_0^2} + \frac{n}{\sigma^2}}
+    \left( \frac{\mu_0}{\lambda \sigma_0^2} + \frac{t(\bm{x})}{\sigma^2} \right),
+    \left( \frac{1}{\lambda \sigma_0^2} + \frac{n}{\sigma^2} \right)^{-1} \right)
+\end{align*}
+
+\paragraph{(b)}
+The \emph{expected information} $I(\mathcal{P}^n, \pi)$ is given by
+\begin{align*}
+    I(\mathcal{P}^n, \pi) = H(\pi) - \int p(\bm{x})H(\pi(\cdot \vert \bm{x}))d\bm{x}
+\end{align*}
+where $H(p) \coloneqq -\int p(z)\ln p(z)dz$ as the \emph{Shannon entropy}.
+
+Recall that the \emph{Shannon entropy} for a normal distribution $\mathcal{N}(\mu, \sigma^2)$ is $H(\mathcal{N}(\mu), \sigma^2) = \frac{1}{2}\ln (2\pi e \sigma^2)$, the \emph{expected information} for $\pi_1$ and $\pi_2$ are then
+\begin{align*}
+    I(\mathcal{P}^n, \pi_1) 
+    &= H(\pi_1) - \int p(\bm{x})H(\pi_1(\cdot \vert \bm{x}))d\bm{x}\\
+    &= \frac{1}{2}\ln (2\pi e \sigma_0^2) - 
+        \int p(\bm{x}) \frac{1}{2}\ln \left( 2\pi e \left( \frac{1}{\sigma_0^2} + \frac{n}{\sigma^2} \right)^{-1} \right) d\bm{x}\\
+    &= \frac{1}{2}\ln (2\pi e \sigma_0^2) - \frac{1}{2}\ln \left( 2\pi e \left( \frac{1}{\sigma_0^2} + \frac{n}{\sigma^2} \right)^{-1} \right) \\
+    % &= \frac{1}{2}\left(\ln \sigma_0^2 \left( \frac{1}{\sigma_0^2} + \frac{n}{\sigma^2} \right) \right)\\
+    &= \frac{1}{2}\ln \left(1 + \frac{n\sigma_0^2}{\sigma^2} \right)
+\end{align*}
+
+\begin{align*}
+    I(\mathcal{P}^n, \pi_2)
+    &= H(\pi_1) - \int p(\bm{x})H(\pi_2(\cdot \vert \bm{x}))d\bm{x}\\
+    &= \frac{1}{2}\ln (2\pi e \lambda \sigma_0^2) - 
+        \int p(\bm{x}) \frac{1}{2}\ln \left( 2\pi e \left( \frac{1}{\lambda \sigma_0^2} + \frac{n}{\sigma^2} \right)^{-1} \right) d\bm{x}\\
+    &= \frac{1}{2}\ln (2\pi e \lambda \sigma_0^2) - 
+        \frac{1}{2}\ln \left( 2\pi e \left( \frac{1}{\lambda \sigma_0^2} + \frac{n}{\sigma^2} \right)^{-1} \right)\\
+    &= \frac{1}{2}\ln \left(1 + \frac{\lambda n\sigma_0^2}{\sigma^2} \right)
+\end{align*}
+
+\paragraph{(c)}
+\begin{align*}
+    % \lim_{n\rightarrow\infty} 
+    I(\mathcal{P}^n, \pi_1) - I(\mathcal{P}^n, \pi_2)
+    &= \frac{1}{2} \ln \left(1 + \frac{n\sigma_0^2}{\sigma^2} \right) -
+        \frac{1}{2} \ln \left(1 + \frac{\lambda n\sigma_0^2}{\sigma^2} \right) \\
+    &= \frac{1}{2}\ln \left( \frac{1 + \frac{n\sigma_0^2}{\sigma^2}}
+        {1 + \frac{\lambda n\sigma_0^2}{\sigma^2}} \right)\\
+    &= \frac{1}{2} \ln \left( \frac{\sigma^2 + n\sigma_0^2}{ \sigma^2 + \lambda n
+        \sigma_0^2} \right)\\
+    \lim_{n\rightarrow\infty} I(\mathcal{P}^n, \pi_1) - I(\mathcal{P}^n, \pi_2)
+    &= \lim_{n\rightarrow\infty} \frac{1}{2} \ln \left( \frac{\sigma^2 + n\sigma_0^2}{ \sigma^2 + \lambda n
+        \sigma_0^2} \right)\\
+    &= -\frac{\ln \lambda}{2}
+\end{align*}
+
+\paragraph{(e)}
+$\pi_2$ is less informative than $\pi_1$ if $\lambda > 1$.

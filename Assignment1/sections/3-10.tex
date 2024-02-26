@@ -19,10 +19,67 @@ Thus, Jeffreys prior is given by $\pi_\mathrm{Jeff}(\theta) \propto 1$. Then the
 It is recognized that the posterior is a Gaussian $\pi_\mathrm{Jeff} (\theta \vert x) = \mathcal{N}(x, 1)$.
 
 \paragraph{(b)}
-% Given that $\pi_\mathrm{Jeff}(\theta) \propto 1$, Jeffreys prior for $\theta \in [-k, k ]$ is given by $\pi^k_\mathrm{Jeff}(\theta) = 1/2k$. The corresponding posterior is derived as follows:
-% \begin{align*}
-%     \pi_\mathrm{Jeff}^k (\theta \vert x)
-%     &\propto \pi_\mathrm{Jeff}^k (\theta) \cdot p(x \vert \theta)\\
-%     &\propto \frac{1}{2k} \exp \left\{ -\frac{1}{2} (x - \theta)^2 \right\}
-% \end{align*}
-% It is recognized that the posterior is a Gaussian $\pi_\mathrm{Jeff}^k (\theta \vert x) = \mathcal{N}(x, 1)$.
+Given that $\pi_\mathrm{Jeff}(\theta) \propto 1$, Jeffreys prior for $\theta \in [-k, k ]$ is given by
+\begin{align*}
+    \pi^k_\mathrm{Jeff}(\theta) = 
+    \begin{cases}
+        \frac{1}{2k} & \text{for }\theta \in [-k, k]\\
+        0 & \text{otherwise}
+    \end{cases}
+\end{align*}
+The corresponding posterior is derived as follows:
+\begin{align*}
+    \pi_\mathrm{Jeff}^k (\theta \vert x)
+    \begin{cases}
+        \propto \pi_\mathrm{Jeff}^k (\theta) \cdot p(x \vert \theta)
+        \propto \exp \left\{ -\frac{1}{2} (x - \theta)^2 \right\}
+        &  \text{for }\theta \in [-k, k]\\
+        0 & \text{otherwise}
+    \end{cases}
+\end{align*}
+It is recognized that the posterior is a truncated Gaussian $\pi_\mathrm{Jeff}^k (\theta \vert x) = \mathcal{TN}(x, 1, -k, k)$.
+
+\paragraph{(c)}
+\begin{proof}
+The Kullback–Leibler divergence between $\pi_\mathrm{Jeff} (\cdot \vert x)$ and $\pi_\mathrm{Jeff}^k (\cdot \vert x)$ over the common support $[-k, k]$ is shown as follows:
+\begin{align*}
+    &D_{\mathrm{KL}}\left( \pi_\mathrm{Jeff} (\cdot \vert x) \Vert \pi_\mathrm{Jeff}^k (\cdot \vert x)\right)\\
+    % &= \int_{-\infty}^{\infty}  \pi_\mathrm{Jeff} (\theta \vert x)
+    %     \ln \left( \frac{\pi_\mathrm{Jeff} (\theta \vert x)}{\pi_\mathrm{Jeff}^k (\theta \vert x)} \right) d\theta \\
+    =& \int_{-k}^{k}  \pi_\mathrm{Jeff} (\theta \vert x)
+        \ln \left( \frac{\pi_\mathrm{Jeff} (\theta \vert x)}{\pi_\mathrm{Jeff}^k (\theta \vert x)} \right) d\theta \\
+        % +
+        % \int\limits_{\theta \notin [-k, k]}  \pi_\mathrm{Jeff} (\theta \vert x)
+        % \ln \left( \frac{\pi_\mathrm{Jeff} (\theta \vert x)}{\pi_\mathrm{Jeff}^k (\theta \vert x)} \right) d\theta \\
+    =& \int_{-k}^{k}  \phi(\theta; x) \ln \left( 
+        \frac{\phi(\theta; x)}{ \frac{\phi(\theta;x)}{\Phi(k-x;x) - \Phi(-k-x;x)}}
+        \right)d\theta \\
+        % + \int\limits_{\theta \notin [-k, k]}  \pi_\mathrm{Jeff} (\theta \vert x)
+        % \ln \left( \frac{\pi_\mathrm{Jeff} (\theta \vert x)}{\pi_\mathrm{Jeff}^k (\theta \vert x)} \right) d\theta \\
+    =& \ln \left( \Phi(k-x;x) - \Phi(-k-x;x) \right) \int_{-k}^{k}
+        \phi(\theta;x)d\theta\\
+    =& \left( \Phi(k-x;x) - \Phi(-k-x;x) \right) \ln \left( \Phi(k-x;x) - \Phi(-k-x;x) \right)\\
+    \text{where}\quad
+    &\phi(\theta;x) = \frac{1}{\sqrt{2\pi}}\exp \left( -\frac{(\theta - x)^2}{2}\right)\\
+    &\Phi(\theta;x) = \int_{-\infty}^{\theta} \phi(z;x) dz
+\end{align*}
+Then we have
+\begin{align*}
+    &\lim_{k\rightarrow \infty} D_{\mathrm{KL}}\left( \pi_\mathrm{Jeff} (\cdot \vert x) \Vert \pi_\mathrm{Jeff}^k (\cdot \vert x)\right)\\
+    =&\lim_{k\rightarrow \infty} \left( \Phi(k-x;x) - \Phi(-k-x;x) \right) \ln \left( \Phi(k-x;x) - \Phi(-k-x;x) \right)\\
+    =& \lim_{k\rightarrow \infty} \left( \Phi(k-x;x) - \Phi(-k-x;x) \right)
+        \lim_{k\rightarrow \infty}\ln \left( \Phi(k-x;x) - \Phi(-k-x;x) \right)\\
+    =& 1\times 0 = 0
+\end{align*}
+\end{proof}
+
+\paragraph{(d)}
+For $\theta_0 \in [-k, k]$ The reference prior $p_0(\pi)$ is given by
+\begin{align*}
+    p_0(\pi)
+    &= \lim_{k\rightarrow \infty} \frac{\pi_\mathrm{Jeff}^k (\theta)}{\pi_\mathrm{Jeff}^k (\theta_0)}
+\end{align*}
+{
+\color{red}
+TOBECONTINUED...
+}
