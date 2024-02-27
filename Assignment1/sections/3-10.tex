@@ -74,12 +74,12 @@ Then we have
 \end{proof}
 
 \paragraph{(d)}
-For $\theta_0 \in [-k, k]$ The reference prior $p_0(\pi)$ is given by
+For $\theta_0 \in [-k, k]$ The reference prior $p_0(\theta)$ is given by
 \begin{align*}
-    p_0(\pi)
-    &= \lim_{k\rightarrow \infty} \frac{\pi_\mathrm{Jeff}^k (\theta)}{\pi_\mathrm{Jeff}^k (\theta_0)}
+    p_0(\theta)
+    &= \lim_{k\rightarrow \infty} \frac{\pi_\mathrm{Jeff}^k (\theta)}{\pi_\mathrm{Jeff}^k (\theta_0)}\\
+    &= \lim_{k\rightarrow \infty} \frac{\frac{1}{2k}}{\frac{1}{2k}}\\
+    &= 1
 \end{align*}
-{
-\color{red}
-TOBECONTINUED...
-}
+
+Here the reference prior is independent from the choice of $\theta_0$ and is identical to the Jeffreys prior. This can be explained by the fact that the statistical model $\mathcal{P} \sim \mathcal{N}(\theta, 1)$ is under regularity conditions.
