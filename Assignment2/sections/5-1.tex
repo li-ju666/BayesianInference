@@ -1,0 +1,27 @@
+\section{Problem 5.1}
+
+\paragraph{(a)}
+Given the likelihood function $p(X \vert \theta) = \mathrm{Exp}(\theta)$ and $\pi(\theta) = \Gamma(\alpha, \beta)$, we have the posterior distribution of $\theta$ given an i.i.d. sample $\bm{x}_{(n)} = (x_1, \dots, x_n)$
+\begin{align*}
+    \pi(\theta \vert \bm{x}_{(n)}) &\propto p(\bm{x}_{(n)} \vert \theta) \pi(\theta) \\
+    &= \prod \mathrm{Exp}(\theta) \Gamma(\alpha, \beta)\\
+    &= \theta^n \exp \{-\theta \sum_{i=1}^{n} x_i\} \theta^{\alpha-1} \exp \{ -\beta \theta\}\\
+    &= \theta^{n+\alpha-1} \exp\{-\theta (\beta + \sum_{i=1}^{n} x_i)\}
+\end{align*}
+Hence, the posterior distribution $\pi(\theta \vert \bm{x}_{(n)}) = \Gamma(n+\alpha, \beta + \sum_{i=1}^{n}x_i)$.
+
+\paragraph{(b)}
+With $L_2$ loss, the Bayes estimator for $\theta$ is given by
+\begin{align*}
+    \delta(\bm{x}_{(n)})
+    &= \underset{\hat{\theta}}{\arg\min}\ \mathbb{E}_{\pi(\theta \vert \bm{x}_{(n)})} L_2(\theta, \hat{\theta})\\
+    &= \underset{\hat{\theta}}{\arg\min}\ \int (\theta - \hat{\theta})^2 \theta^{n+\alpha-1} \exp\{-\theta (\beta + \sum_{i=1}^{n} x_i)\} d\theta \cdot \frac{(\beta+\sum_{i=1}^{n}x_i)^{\alpha+n}}{\Gamma(n+\alpha)}\\
+    &= \underset{\hat{\theta}}{\arg\min}\ \hat{\theta}^2 - 2\hat{\theta} \int \theta^{n+\alpha} \exp\{-\theta (\beta + \sum_{i=1}^{n} x_i)\} d\theta \cdot \frac{(\beta+\sum_{i=1}^{n}x_i)^{\alpha+n}}{\Gamma(n+\alpha)} + \mathrm{const.}\\
+    &= \underset{\hat{\theta}}{\arg\min}\ \hat{\theta}^2 - 2\hat{\theta} \frac{\Gamma(n+\alpha+1)}{(\beta+\sum_{i=1}^{n}x_i)^{\alpha+n+1}} \frac{(\beta+\sum_{i=1}^{n}x_i)^{\alpha+n}}{\Gamma(n+\alpha)} + \mathrm{const.}\\
+    &= \underset{\hat{\theta}}{\arg\min}\ \hat{\theta}^2 - 2\hat{\theta} \frac{n+\alpha}{\beta + \sum_{i=1}^n x_i} + \mathrm{const.}\\
+    \delta(\bm{x}_{(n)})
+    &= \frac{n+\alpha}{\beta + \sum_{i=1}^n x_i}
+\end{align*}
+
+\paragraph{(c)}
+{\color{red} tobecontinued}

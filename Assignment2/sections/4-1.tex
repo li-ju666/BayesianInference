@@ -1,0 +1,123 @@
+\section{Problem 4.1}
+\paragraph{(a)}
+With the given $p(x \vert \theta)$ in the table and $\pi(\theta)$, the joint distribution and marginal distributions of $x$ and $\theta$ are computed as follows and shown in Table \ref{tab:4-1-joint}.
+
+\begin{align*}
+    p(x, \theta) &= p(x \vert \theta) \pi(\theta) \\
+    p(x) &= \sum_{\theta \in \{0, 1, 2\}} p(x, \theta)
+\end{align*}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{c c c c c}
+    \toprule
+    & $x=-1$ & $x=0$ & $x=1$ & $\pi(\theta)$ \\
+    \midrule
+    $\theta = 0$    & $0.5-0.5p$  & $0.3-0.3p$  & $0.2-0.2p$  &  $1-p$ \\
+    $\theta = 1$    & $0$  & $0.5p$   & $0.5p$  & $p$ \\
+    $p(x)$          & $0.5-0.5p$   & $0.3+0.2p$  & $0.2+0.3p$  &  \\
+    \bottomrule
+    \end{tabular}
+    \caption{Joint and marginal distributions of $x$ and $\theta$.}
+    \label{tab:4-1-joint}
+\end{table}
+
+The posterior distribution of $\theta$ given $x$ is computed as follows and shown in Table \ref{tab:4-1-post}.
+
+\begin{equation*}
+    \pi(\theta \vert x) = \frac{p(x, \theta)}{p(x)}
+\end{equation*}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{c c c c}
+    \toprule
+    & $x=-1$ & $x=0$ & $x=1$ \\
+    \midrule
+    $\theta = 0$    & $1$  & $\frac{3-3p}{3+2p}$  & $\frac{2-2p}{2+3p}$  \\
+    $\theta = 1$    & $0$  & $\frac{5p}{3+2p}$  & $\frac{5p}{2+3p}$  \\
+    \bottomrule
+    \end{tabular}
+    \caption{Posterior distribution of $\theta$ given $x$ $\Pr(\theta \vert x)$.}
+    \label{tab:4-1-post}
+\end{table}
+
+%=============
+\paragraph{(b)}
+The Bayes estimator is defined as 
+\begin{align*}
+    \hat{\theta}^\pi 
+    &\coloneqq \underset{\hat{\theta}}{\arg \min} \ \mathbb{E}_{\pi(\theta \vert x)} L(\theta, \hat{\theta}) \\ 
+    &= \underset{\hat{\theta}}{\arg \min} \sum_{\theta_0 \in \{0, 1\}} L(\theta_0, \hat{\theta}) \Pr(\theta=\theta_0 \vert x)
+\end{align*}
+The expected posterior loss is computed as follows:
+\begin{align*}
+    \mathbb{E}_{\pi(\theta \vert x)} L(\theta, \hat{\theta}) = 
+    \begin{cases}
+        L(0, \hat{\theta}) & x = -1 \\
+        L(0, \hat{\theta}) \frac{3-3p}{3+2p} + L(1, \hat{\theta}) \frac{5p}{3+2p} & x=0\\
+        L(0, \hat{\theta}) \frac{2-2p}{2+3p} + L(1, \hat{\theta}) \frac{5p}{2+3p} & x=1
+    \end{cases}
+\end{align*}
+
+Hence, with the $0-1$ loss function $L$, the Bayes estimator for $\theta$ is given in Table \ref{tab:4-1-estimator}.
+\begin{table}[htp]
+    \centering
+    \begin{tabular}{c c c c}
+    \toprule
+           & $p > \frac{3}{8}$ & $ \frac{2}{7} \geq p > \frac{2}{7}$ & $\frac{2}{7} \geq p $\\
+    \midrule
+    $x=-1$ & $0$ & $0$ & $0$ \\
+    $x=0$  & $1$ & $0$ & $0$ \\
+    $x=1$ & $1$ & $1$ & $0$ \\
+    \bottomrule
+    \end{tabular}
+    \caption{The Bayes estimator for $\theta$. }
+    \label{tab:4-1-estimator}
+\end{table}
+
+%============
+\paragraph{(c)}
+The frequentist risk is defined by 
+\begin{align*}
+    R(\theta_0, \hat{\theta})
+    &\coloneqq \mathbb{E}_{p(x \vert \theta_0)} L(\theta_0, \hat{\theta})\\
+    &= \sum_{x\in \{-1, 0, 1\}} L(\theta_0, \hat{\theta}) \Pr(X=x \vert \theta_0)
+\end{align*}
+Hence, the frequentist risks of the Bayes estimator of $\theta$ are given in Table \ref{tab:4-1-freq-risk}.
+\begin{table}[htp]
+    \centering
+    \begin{tabular}{c c c c}
+    \toprule
+           & $p > \frac{3}{8}$ & $ \frac{2}{7} \geq p > \frac{2}{7}$ & $\frac{2}{7} \geq p $\\
+    \midrule
+    $\theta_0=0$ & $0.5$ & $0.2$ & $0$ \\
+    $\theta_0=1$ & $0$ & $0.5$ & $1$ \\
+    \bottomrule
+    \end{tabular}
+    \caption{The frequentist risk for the Bayes estimator $\hat{\theta}^\pi$. }
+    \label{tab:4-1-freq-risk}
+\end{table}
+
+\paragraph{(d)}
+The Bayes risk is defined by
+\begin{align*}
+    r(\pi, \delta) \coloneqq 
+    \mathbb{E}^{\pi} R(\theta, \delta) = \sum_{\theta_0 \in \{0, 1\}} R(\theta_0, \delta) \pi(\theta_0)
+\end{align*}
+Hence, the Bayes risk of the Bayes estimator for $\theta$ is given by
+\begin{align}\label{eq:4-1-bayes-risk}
+    r(\pi, \hat{\theta}^\pi) =
+    \begin{cases}
+        0.5 - 0.5p & p>\frac{3}{8}\\
+        0.2 + 0.3p & \frac{2}{7} \geq p > \frac{2}{7} \\
+        p & \frac{2}{7} \geq p
+    \end{cases}
+\end{align}
+
+\paragraph{(e)}
+The least favourable prior is defined by
+\begin{align*}
+    \pi_0 \coloneqq \underset{\pi}{\arg\max} \ r(\pi, \hat{\theta}^\pi)
+\end{align*}
+Given that $r(\pi, \hat{\theta}^{\pi(p))}$ is a piecewise linear function w.r.t $p$ as shown in Equation \ref{eq:4-1-bayes-risk}, the suppremum of the $r(\pi, \hat{\theta}^{pi})$ is given when $p=\frac{3}{8}$. Hence, the least favourable prior is $\pi_0 = \Pr (\theta = 1) = \frac{3}{8}$.

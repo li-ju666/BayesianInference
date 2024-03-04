@@ -1,0 +1,31 @@
+\section{Problem 5.2}
+\paragraph{(a)}
+Assume $p(\bm{\theta})$ in exponential family in the form of $p(\bm{\theta}) = h(x)g(\bm{\theta})\exp (\bm{\eta}(\bm{\theta})^\top \bm{T}(x))$. The Kullback-Leibler divergence between $p(\bm{\theta}_0)$ and $p(\bm{\theta})$ is given as follows:
+\begin{align*}
+    \mathrm{KL}\left( p(\bm{\theta}_0) \Vert p(\bm{\theta})\right)
+    &= \int p_x(\bm{\theta}_0) \ln \frac{p_x(\bm{\theta}_0)}{p_x(\bm{\theta})} dx \\
+    &= \int p(\bm{\theta}_0)
+        \ln \frac{h(x)g(\bm{\theta}_0)\exp (\bm{\eta}(\bm{\theta}_0)^\top \bm{T}(x))}{h(x)g(\bm{\theta})\exp (\bm{\eta}(\bm{\theta})^\top \bm{T}(x))} dx\\
+    &= \ln \frac{g(\bm{\theta}_0)}{g(\bm{\theta})} + 
+        \int p(\bm{\theta}_0) \left(\bm{\eta}(\bm{\theta}_0) - \bm{\eta}(\bm{\theta})\right)^\top \bm{T}(x) dx\\
+    &= \ln \frac{g(\bm{\theta}_0)}{g(\bm{\theta})} + (\bm{\eta}(\bm{\theta}_0) - \bm{\eta}(\bm{\theta}))^\top \mathbb{E}_{p(\bm{\theta}_0)}\left[ \bm{T}(x)\right]
+\end{align*}
+
+\paragraph{(b)}
+For Gamma distributions, first we reform $\Gamma(\alpha, \beta)$ in exponential form:
+\begin{align*}
+    \Gamma_x(\alpha, \beta) = h(x)g(\alpha, \beta)\exp (\bm{\eta}(\alpha, \beta) \bm{T}(x))
+\end{align*}
+where $h(x) = 1$, $g(\bm{\theta}) = \frac{\beta^\alpha}{\Gamma(\alpha)}$, $\bm{\eta}(\alpha, \beta) = (\alpha-1, -\beta)^\top$ and $\bm{T}(x) = (\ln x, x)^\top$.
+
+Then the Kullback-Leibler divergence between $\Gamma(\alpha_0, \beta_0)$ and $\Gamma(\alpha, \beta)$ is given by
+\begin{align*}
+    \mathrm{KL}\left( \Gamma(\alpha_0, \beta_0) \Vert \Gamma(\alpha, \beta) \right)
+    &= \ln \frac{\beta_0^{\alpha_0} \Gamma(\alpha)} {\beta^\alpha \Gamma(\alpha_0)} + 
+        (\alpha_0 - \alpha) \mathbb{E}_{\Gamma(\alpha_0, \beta_0)} [\ln x] -
+        (\beta_0 - \beta) \mathbb{E}_{\Gamma(\alpha_0, \beta_0)} [x]\\
+    &= \alpha_0 \ln \beta_0 - \alpha \ln \beta + \ln \Gamma(\alpha) - \ln \Gamma (\alpha_0) + 
+        (\alpha_0 - \alpha)(\psi(\alpha_0) - \ln\beta_0) - (\beta_0 - \beta)\frac{\alpha_0}{\beta_0}\\
+    &= \alpha(\ln \beta_0 - \ln \beta) + \ln \Gamma(\alpha) - \ln \Gamma (\alpha_0) + (\alpha_0 - \alpha)\psi(\alpha_0) + \frac{\beta - \beta_0}{\beta_0}\alpha_0
+\end{align*}
+where $\psi$ is the digamma function $\psi(z) = \frac{d \Gamma(z)}{dz}$. 
