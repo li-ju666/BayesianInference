@@ -1,3 +1,62 @@
 \section{Problem 5.4}
-\paragraph{(a)}
-{\color{red} tobecontinued}
+\begin{proof}
+With the conjugate prior $\theta \sim \Gamma(\alpha, \beta)$, the likelihood $X \vert \theta \sim \Gamma(\nu, \theta)$, and a set of i.i.d. observatios $\bm{X}_{(n)} = \{X_1, \dots, X_n\}$, the posterior is given by
+\begin{align*}
+    \pi(\theta \vert \bm{X}_{(n)}) 
+    &\propto \prod_{i=1}^{n} p(X_i \vert \theta) \pi(\theta)\\
+    &\propto \prod_{i=1}^{n} \theta^{\nu} X_i^{\nu - 1} \exp\{-\theta X_i\} \cdot \theta^{\alpha-1} \exp\{-\beta\theta\}\\
+    &\propto \theta^{n\nu + \alpha-1} \exp \{-\theta (\sum_{i=1}^{n} X_i + \beta)\}
+\end{align*}
+It is recognized that the posterior distribution of $\theta \vert \bm{X}_{(n)} \sim \Gamma(n\nu+\alpha, \sum_{i=1}^{n}X_i + \beta)$.
+
+For prior $\pi_1, \pi_2: \theta \sim \Gamma(\alpha_1, \beta), \theta \sim \Gamma(\alpha_2, \beta)$, the Kullback-Leibler divergence of the corresponding posteriors is given by
+\begin{align*}
+    \mathrm{KL}\left( \pi_1^{n}(\theta \vert \bm{X}) \Vert \pi_2^{n}(\theta \vert \bm{X})\right)
+    &= \int_{0}^{\infty} \pi_1^{n}(\theta \vert \bm{X}) \ln \frac{\pi_1^{n}(\theta \vert \bm{X})}{\pi_2^{n}(\theta \vert \bm{X})} d\theta \\
+    &= \int_{0}^{\infty} \pi_1^{n}(\theta \vert \bm{X}) \ln \frac
+        {\Gamma(n\nu+\alpha_0, \sum_{i=1}^{n} X_i + \beta)}
+        {\Gamma(n\nu+\alpha_1, \sum_{i=1}^{n} X_i + \beta)} d\theta \\
+    &=\int_{0}^{\infty} \pi_1^{n}(\theta \vert \bm{X}) \ln \left(
+        (\sum_{i=1}^{n}X_i + \beta)^{\alpha_0 - \alpha_1}
+        \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_0)}
+        \theta^{\alpha_0 - \alpha_1}
+        \right) d\theta\\
+    &= (\alpha_0 - \alpha_1)\ln (\sum_{i=1}^{n}X_i + \beta) +
+        \ln \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_0)} +
+        (\alpha_0 - \alpha_1) \mathbb{E}_{\pi^n_1} [\theta]\\
+    &= (\alpha_0 - \alpha_1)\ln (\sum_{i=1}^{n}X_i + \beta) +
+        \ln \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_0)} +
+        (\alpha_0 - \alpha_1) \frac{n\nu + \alpha_0}{\sum_{i=1}^{n}X_i + \beta}
+\end{align*}
+The strong law of large numbers yields $\sum_{i}^{n}Y_i \rightarrow n\mathbb{E} [Y] \mathrm{a.s.}$ for $n\rightarrow \infty$. Thus we have
+\begin{align*}
+    &\lim_{n\rightarrow\infty} \mathrm{KL}\left( \pi_1^{n}(\theta \vert \bm{X}) \Vert \pi_2^{n}(\theta \vert \bm{X})\right)\\
+=\ & \lim_{n\rightarrow\infty} (\alpha_0 - \alpha_1)\ln (\sum_{i=1}^{n}X_i + \beta) +
+        \ln \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_0)} +
+        (\alpha_0 - \alpha_1) \frac{n\nu + \alpha_0}{\sum_{i=1}^{n}X_i + \beta}\\
+=\ & \lim_{n\rightarrow\infty} (\alpha_0 - \alpha_1) \ln(n\nu + \beta) + 
+    \ln \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_0)} + (\alpha_0 - \alpha_1) \ln \frac{n\nu+\alpha_0}{n\nu+\beta}\\
+=\ & \lim_{n\rightarrow\infty} \ln \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_0)} (n\nu + \beta)^{\alpha_0 - \alpha_1}\\
+=\ & \lim_{n\rightarrow\infty} \ln \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_1)(n\nu+\alpha_1)^{\alpha_0 - \alpha_1}} (n\nu + \beta)^{\alpha_0 - \alpha_1} \quad  \vartriangleright \text{Stirling's Approximation}\\
+=\ & \lim_{n\rightarrow\infty} (\alpha_0 - \alpha_1) \ln \frac{n\nu+\beta}{n\nu+\alpha_1}\\
+=\ &0
+\end{align*}
+
+By applying Pinsker's inequality, we have
+\begin{align*}
+    \sqrt{\frac{1}{2}\mathrm{KL}\left( \pi_1^{n}(\theta \vert \bm{X}) \Vert \pi_2^{n}(\theta \vert \bm{X})\right)} \geq \sup_A \left\vert \Pr^{\pi_1}_n(A \vert \bm{X}) - \Pr^{\pi_1}_n(A \vert \bm{X}) \right\vert
+    \geq 0
+\end{align*}
+Take the limitation on $n \rightarrow \infty$,  hence we have
+\begin{align*}
+    0 \leq
+    \lim_{n\rightarrow\infty} \sup_A \left\vert \Pr^{\pi_1}_n(A \vert \bm{X}) - \Pr^{\pi_1}_n(A \vert \bm{X}) \right\vert
+    \leq
+    \lim_{n\rightarrow\infty} \sqrt{\frac{1}{2}\mathrm{KL}\left( \pi_1^{n}(\theta \vert \bm{X}) \Vert \pi_2^{n}(\theta \vert \bm{X})\right)} = 0
+\end{align*}
+Then
+\begin{align*}
+    \lim_{n\rightarrow\infty} \sup_A \left\vert \Pr^{\pi_1}_n(A \vert \bm{X}) - \Pr^{\pi_1}_n(A \vert \bm{X}) \right\vert
+    = 0
+\end{align*}
+\end{proof}

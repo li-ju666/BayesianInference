@@ -1,2 +1,58 @@
 \section{Problem 6.1}
 \paragraph{(a)}
+Let $\bm{x}_i = (1, x_i, z_i)^{\top}$, $\bm{X} = (\bm{x}_1, \dots, \bm{x}_n)^\top$ and $\bm{\beta} = (\beta_0, \beta_1, \beta_2)^{\top}$. The Bayes model $\{\mathcal{P}, \pi\}$ in matrix form is given by
+\begin{align*}
+    \{ \{ \mathcal{N}_n(\bm{X}^{\top}\bm{\beta}, \bm{I}_n): \bm{\beta}\in \mathbb{R}^{3}\},
+    \mathcal{N}_3(\bm{\gamma}, \bm{\Gamma)} \}
+\end{align*}
+where
+\begin{align*}
+    \bm{\gamma} =
+    \begin{pmatrix}
+        1\\
+        1\\
+        1
+    \end{pmatrix} \quad \text{and} \quad
+    \bm{\Gamma} =
+    \begin{pmatrix}
+    1&0.5&0\\
+    0.5&1&0\\
+    0&0&1
+    \end{pmatrix}
+\end{align*}
+Let $\bm{y} = (y_1, \dots, y_n)^\top$, then we have the model equation as
+\begin{align*}
+    \bm{y} = \bm{X}^{\top}\bm{\beta} + \bm{\epsilon}
+\end{align*}
+where $\bm{\epsilon} \sim \mathcal{N}_n(\bm{0}, \bm{I}_n)$ and $\bm{\beta} \sim \mathcal{N}_3(\bm{\gamma}, \bm{\Gamma})$. Additional the design matrix $\bm{X}$ is orthogonal, such that $\bm{X}^{\top}\bm{X} = n\bm{I}_3$.
+
+\paragraph{(b)}
+The posterior distribution of $\bm{\beta}$ is given as follows:
+\begin{align*}
+    \bm{\theta} \vert \bm{X} \sim \mathcal{N}(\bm{\gamma}_{\bm{\beta} \vert \bm{y}}, \bm{\Gamma}_{\bm{\beta} \vert \bm{y}})
+\end{align*}
+where
+\begin{align*}
+    \bm{\Gamma}_{\bm{\beta} \vert \bm{y}} 
+    &= 
+    (\bm{\Gamma}^{-1} + \bm{X}^{\top}\bm{I}_n^{-1}\bm{X})^{-1} \\
+    &=
+    \left(
+    \begin{pmatrix}
+        \frac{4}{3} & -\frac{2}{3} & 0\\
+        -\frac{2}{3} & \frac{4}{3} & 0\\
+        0 & 0 & 1
+    \end{pmatrix} + n\bm{I}_3
+    \right)^{-1}\\
+    &=
+    \begin{pmatrix}
+        \frac{4+7n+3n^2}{4+12n+11n^2+3n^3} & \frac{2+2n}{4+12n+11n^2+3n^3} & 0\\
+        \frac{2+2n}{4+12n+11n^2+3n^3} & \frac{4+7n+3n^2}{4+12n+11n^2+3n^3} & 0\\
+        0 & 0 & \frac{4+7n+3n^2}{4+12n+11n^2+3n^3}
+    \end{pmatrix}\\
+    \bm{\gamma}_{\bm{\beta} \vert \bm{y}}
+    &=\bm{\Gamma}_{\bm{\beta} \vert \bm{y}}(\bm{X}^{\top} \bm{I}_3^{-1} \bm{y} + \bm{\Gamma}^{-1}\bm{\gamma})\\
+    &= \bm{\Gamma}_{\bm{\beta} \vert \bm{y}}  \left(
+    \bm{X}^{\top}\bm{y} + \left( \frac{2}{3}, \frac{2}{3}, 1 \right)^{\top}
+    \right)
+\end{align*}

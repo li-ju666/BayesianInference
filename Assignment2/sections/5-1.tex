@@ -1,14 +1,15 @@
 \section{Problem 5.1}
+Notation: $\Gamma(a, b)$ denotes a gamma distribution with parameters $a$ and $b$, and $\Gamma(z)$ denotes a gamma function w.r.t $z$.
 
 \paragraph{(a)}
-Given the likelihood function $p(X \vert \theta) = \mathrm{Exp}(\theta)$ and $\pi(\theta) = \Gamma(\alpha, \beta)$, we have the posterior distribution of $\theta$ given an i.i.d. sample $\bm{x}_{(n)} = (x_1, \dots, x_n)$
+Given the model $X \vert \theta \sim \mathrm{Exp}(\theta)$ and priot $\theta \sim \Gamma(\alpha, \beta)$, we have the posterior distribution of $\theta$ given an i.i.d. sample $\bm{x}_{(n)} = (x_1, \dots, x_n)$
 \begin{align*}
     \pi(\theta \vert \bm{x}_{(n)}) &\propto p(\bm{x}_{(n)} \vert \theta) \pi(\theta) \\
     &= \prod \mathrm{Exp}(\theta) \Gamma(\alpha, \beta)\\
     &= \theta^n \exp \{-\theta \sum_{i=1}^{n} x_i\} \theta^{\alpha-1} \exp \{ -\beta \theta\}\\
     &= \theta^{n+\alpha-1} \exp\{-\theta (\beta + \sum_{i=1}^{n} x_i)\}
 \end{align*}
-Hence, the posterior distribution $\pi(\theta \vert \bm{x}_{(n)}) = \Gamma(n+\alpha, \beta + \sum_{i=1}^{n}x_i)$.
+Hence, the posterior distribution $\theta \vert \bm{x}_{(n)} \sim \Gamma(n+\alpha, \beta + \sum_{i=1}^{n}x_i)$.
 
 \paragraph{(b)}
 With $L_2$ loss, the Bayes estimator for $\theta$ is given by

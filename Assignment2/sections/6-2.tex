@@ -1,2 +1,140 @@
 \section{Problem 6.2}
 \paragraph{(a)}
+Let $\bm{y} = (y_1, \dots, y_n)^{\top}$ and $\bm{x}=(x_1, \dots, x_n)^{\top}$. For $\theta = (\alpha, \beta, \sigma^2)$, we have
+\begin{align*}
+    \bm{y} \vert \theta 
+    & \sim \mathcal{N}_{n} \left( \bm{1}_n\alpha+\bm{x}\beta, \sigma^2\bm{I}_n \right)\\
+    p(\bm{y} \vert \theta)
+    &= \prod_{i=1}^{n}\frac{1}{\sigma\sqrt{2\pi}} \exp \left\{\frac{1}{2}\left( \frac{y_i - \alpha - x_i\beta}{\sigma} \right)^2 \right\} \\
+    \ln p(\bm{y} \vert \theta))
+    &= \sum_{i=1}^{n} -\ln \sigma - \frac{1}{2}\left( \frac{y_i - \alpha - x_i\beta}{\sigma} \right)^2 +\mathrm{const.}\\
+    &= -\frac{n}{2}\ln \sigma^2 - \frac{1}{2} \sum_{i=1}^{n} \left( \frac{y_i - \alpha - x_i\beta}{\sigma} \right)^2 +\mathrm{const.}
+\end{align*}
+The score function is then
+\begin{align*}
+    V(\theta \vert \bm{y}) 
+    &= \frac{\partial \ln p(\bm{y} \vert \theta)}{ \partial \theta} \\
+    &=  \begin{pmatrix}
+        \frac{\partial \ln p(\bm{y} \vert \theta)}{ \partial \alpha} \\ 
+        \frac{\partial \ln p(\bm{y} \vert \theta)}{ \partial \beta} \\
+        \frac{\partial \ln p(\bm{y} \vert \theta)}{ \partial \sigma^2} \\
+        \end{pmatrix}\\
+    &= \begin{pmatrix}
+        -\frac{n\alpha + \sum_{i=1}^n (x_i\beta - y_i)}{\sigma^2} \\ 
+        -\frac{\beta\sum_{i=1}^n x_i^2 + \sum_{i=1}^n x_i(\alpha - y_i)} {\sigma^2} \\
+        -\frac{n}{2\sigma^2} + \frac{1}{2\sigma^4} \sum_{i=1}^n (y_i - \alpha - x_i\beta)^2 \\
+        \end{pmatrix}
+\end{align*}
+Further the Jacobian of $\ln p(\theta \vert \bm{y})$ is 
+\begin{align*}
+    J(\theta \vert \bm{y}) 
+    &=\begin{pmatrix}
+        \frac{\partial^2 \ln p(\bm{y} \vert \theta)}{\partial^2 \alpha} &
+        \frac{\partial^2 \ln p(\bm{y} \vert \theta)}{\partial \alpha \partial \beta} &
+        \frac{\partial^2 \ln p(\bm{y} \vert \theta)}{\partial \alpha \partial \sigma^2} \\
+        \frac{\partial^2 \ln p(\bm{y} \vert \theta)}{\partial \beta \partial \alpha} &
+        \frac{\partial^2 \ln p(\bm{y} \vert \theta)}{\partial^2 \beta} &
+        \frac{\partial^2 \ln p(\bm{y} \vert \theta)}{\partial \beta \partial \sigma^2} \\
+        \frac{\partial^2 \ln p(\bm{y} \vert \theta)}{\partial \sigma^2 \partial \alpha} &
+        \frac{\partial^2 \ln p(\bm{y} \vert \theta)}{\partial \sigma^2 \partial \beta} &
+        \frac{\partial^2 \ln p(\bm{y} \vert \theta)}{\partial^2 \sigma^2} \\
+    \end{pmatrix}\\
+    &=
+    \begin{pmatrix}
+        -\frac{n}{\sigma^2} & -\frac{\sum_{i=1}^n x_i}{\sigma^2} & \frac{n\alpha + \sum_{i=1}^n (x_i\beta - y_i)}{\sigma^4}\\
+        -\frac{\sum_{i=1}^n x_i}{\sigma^2} & -\frac{\sum_{i=1}^n x_i^2}{\sigma^2} & \frac{\beta\sum_{i=1}^n x_i^2 + \sum_{i=1}^n x_i(\alpha - y_i)} {\sigma^4}\\
+        \frac{n\alpha + \sum_{i=1}^n (x_i\beta - y_i)}{\sigma^4} & \frac{\beta\sum_{i=1}^n x_i^2 + \sum_{i=1}^n x_i(\alpha - y_i)} {\sigma^4} &
+        \frac{n}{2\sigma^4} - \frac{1}{\sigma^6} \sum_{i=1}^n (y_i - \alpha - x_i\beta)^2
+    \end{pmatrix}
+\end{align*}
+We have $\mathbb{E}_{p(y \vert \bm{\theta})} y = \alpha + x\beta$. Then the Fisher information matrix following $I(\theta) = 
+-\mathbb{E}_{p(y \vert \bm{\theta})} J(\theta \vert \bm{y}) $ is then
+\begin{align*}
+    I(\theta) = 
+        \begin{pmatrix}
+        \frac{n}{\sigma^2} & \frac{\sum_{i=1}^n x_i}{\sigma^2} & 0\\
+        \frac{\sum_{i=1}^n x_i}{\sigma^2} & \frac{\sum_{i=1}^n x_i^2}{\sigma^2} & 0 \\
+        0 & 0 & -\frac{n}{2\sigma^4}
+    \end{pmatrix}
+\end{align*}
+The Jeffreys prior is given by 
+\begin{align*}
+    \pi_{\mathrm{Jeff}} \propto \sqrt{\det (I(\theta))} \propto \sqrt{ \frac{1}{\sigma^8} }= \frac{1}{\sigma^4}
+\end{align*}
+
+Further, we assume the independence of $(\alpha, \beta)$ and $\sigma^2$ as $\pi^{\mathrm{ind}}(\alpha, \beta, \sigma^2) = \pi^{\mathrm{ind}}(\alpha, \beta) \pi^{\mathrm{ind}}(\sigma^2)$. Then we have
+\begin{align*}
+    I(\alpha, \beta) = 
+    \begin{pmatrix}
+        \frac{n}{\sigma^2} & \frac{\sum_{i=1}^n x_i}{\sigma^2} \\
+        \frac{\sum_{i=1}^n x_i}{\sigma^2} & \frac{\sum_{i=1}^n x_i^2}{\sigma^2}
+    \end{pmatrix}
+\end{align*}
+and $\pi^{\mathrm{ind}}_{\mathrm{Jeff}}(\alpha, \beta) \propto \sqrt{\det (I(\alpha, \beta))} \propto 1$. Also we have $I(\sigma^2) = \frac{n}{2\sigma^4}$ and $\pi^{\mathrm{ind}}_{\mathrm{Jeff}}(\sigma^2) \propto \sqrt{\det (I(\sigma^2))} \propto \frac{1}{\sigma^2}$. 
+Then we have 
+\begin{align*}
+    \pi_{\mathrm{Jeff}}^{\mathrm{ind}}(\alpha, \beta, \sigma^2) \propto \frac{1}{\sigma^2}
+\end{align*}
+
+\paragraph{(b)}
+(i). Using $\pi(\alpha, \beta) \propto 1$ and $\pi(\sigma^2) \propto \frac{1}{\sigma^2}$ under the assumption of the independence of $(\alpha, \beta)$ and $\sigma^2$, we have
+\begin{align*}
+    \pi(\alpha, \beta \vert \bm{y}, \sigma^2)
+    &\propto \pi(\alpha, \beta) p(\bm{y} \vert \alpha, \beta, \sigma^2)\\
+    &\propto \exp \left\{-\frac{1}{2} \sum_{i=1}^{n}\left( \frac{y_i - \alpha - x_i \beta }{\sigma^2} \right)^2 \right\}\\
+    &\propto \exp\left\{-\frac{1}{2} \left((\alpha, \beta) - (\hat{\alpha}, \hat{\beta})\right) \Sigma^{-1}
+        \left((\alpha, \beta) - (\hat{\alpha}, \hat{\beta})\right)^\top \right\}\\
+\end{align*}
+Hence, we have
+\begin{align*}
+    \alpha, \beta \vert \bm{y}, \sigma^2 &\sim \mathcal{N}_2\left((\hat{\alpha}_{\mathrm{MLE}}, \hat{\beta}_{\mathrm{MLE}})^\top, \Sigma^2 \right)\\
+    \text{where}\ &
+    \hat{\beta}_{\mathrm{MLE}} = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n} (x_i - \bar{x})^2}, \ 
+    \hat{\alpha}_{\mathrm{MLE}} = \bar{y} - \hat{\beta}\bar{x}, \ 
+    \\
+    &     \Sigma^{-1} = \sigma^2
+    \begin{pmatrix}
+        n & \sum_{i=1}^n x_i \\
+        \sum_{i=1}^n x_i & \sum_{i=1}^n x_i^2
+    \end{pmatrix}^{-1}\\
+    \text{and}\ & \bar{x} = \frac{\sum_{i=1}^n x_i}{n}, \ \bar{y} = \frac{\sum_{i=1}^n y_i}{n}
+\end{align*}
+
+(ii). For $\pi(\beta \vert \bm{y}, \sigma^2)$, we have
+\begin{align*}
+    \pi(\beta \vert \bm{y}, \sigma^2)
+    &= \int \pi(\alpha, \beta \vert \bm{y}, \sigma^2) d\alpha
+\end{align*}
+Then we have $\beta \vert \bm{y}, \sigma^2 \sim \mathcal{N}(\hat{\beta}, \frac{\sigma^2}{n})$.
+
+(iii). For $\pi(\beta \vert \bm{y}, \alpha, \sigma^2)$, we have
+\begin{align*}
+    \pi(\beta \vert \bm{y}, \alpha, \sigma^2)
+    &\propto \pi(\beta) p(\bm{y} \vert \alpha, \beta, \sigma^2)\\
+    &\propto \exp \left\{-\frac{1}{2} \sum_{i=1}^{n}\left( \frac{y_i - \alpha - x_i \beta }{\sigma} \right)^2 \right\}\\
+    &\propto \exp \left\{
+        -\frac{1}{2} \frac{\beta^2 \sum_{i=1}^n x_i^2 + 2\beta\sum_{i=1}^n x_i(\alpha-y_i)}{\sigma^2}
+        \right\}\\
+    &\propto \exp \left\{
+        -\frac{1}{2} \frac{( \beta - \frac{\sum_{i=1}^n x_i(y_i-\alpha)}{\sum_{i=1}^n x_i^2})^2}{\frac{\sigma^2}{\sum_{i=1}^n x_i^2}}
+        \right\}
+\end{align*}
+Then we have $\beta \vert \bm{y}, \alpha, \sigma^2 \sim \mathcal{N}(\frac{\sum_{i=1}^n x_i(y_i-\alpha)}{\sum_{i=1}^n x_i^2}, \frac{\sigma^2}{\sum_{i=1}^n x_i^2})$.
+
+(iv). For $\pi(\alpha, \beta, \sigma^2 \vert \bm{y})$, we have
+\begin{align*}
+    \pi(\alpha, \beta, \sigma^2 \vert \bm{y})
+    &= p(\bm{y} \vert \alpha, \beta, \sigma^2) \pi (\alpha, \beta, \sigma^2)
+\end{align*}
+With Theorem 6.7, we have
+\begin{align*}
+    \alpha, \beta, \sigma^2 \vert \bm{y} \sim \mathcal{NIG}(n-2, \sum_{i=1}^{n}\left( y_i - \hat{\alpha}_{\mathrm{MLE}} - x_i \hat{\beta}_{\mathrm{MLE}} \right)^2, (\hat{\alpha}_{\mathrm{MLE}}, \hat{\beta}_{\mathrm{MLE}})^{\top}, \Sigma^{-1})
+\end{align*}
+
+With the properties of normal inverse gamma distribution, we have $ \sigma^2 \vert \bm{y} \sim \mathcal{IG}\left( \frac{n}{2}-1, \frac{1}{2}\sum_{i=1}^{n}\left( y_i - \hat{\alpha}_{\mathrm{MLE}} - x_i \hat{\beta}_{\mathrm{MLE}} \right)^2 \right) $
+
+(v). Similarly for $\pi(\alpha, \beta \vert \bm{y})$, we have
+\begin{align*}
+    \alpha, \beta \vert \bm{y} \sim \bm{t}_2 (n-2, (\hat{\alpha}_{\mathrm{MLE}}, \hat{\beta}_{\mathrm{MLE}})^{\top}, \frac{1}{n-2} \sum_{i=1}^{n}\left( y_i - \hat{\alpha}_{\mathrm{MLE}} - x_i \hat{\beta}_{\mathrm{MLE}} \right)^2 \Sigma^{-1})
+\end{align*}
+where $\bm{t}_2$ is a bivariate t-distribution. 

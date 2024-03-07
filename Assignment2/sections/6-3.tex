@@ -1,2 +1,14 @@
 \section{Problem 6.3}
 \paragraph{(a)}
+With Jeffreys prior $\pi(\sigma^2) \propto \sigma^{-2}$, we have
+\begin{align*}
+    \pi(\sigma^2 \vert \bm{y}, \alpha, \beta)
+    &\propto \pi(\sigma^2) p(\bm{y} \vert \alpha, \beta, \sigma^2)\\
+    &\propto \frac{1}{\sigma^n} \exp \left\{-\frac{1}{2} \sum_{i=1}^{n}\left( \frac{y_i - \alpha - x_i \beta }{\sigma} \right)^2 \right\} \frac{1}{\sigma^2}\\
+    &\propto (\sigma^2)^{-\frac{n}{2}-1} \exp \left(
+        -\frac{1}{\sigma^2} \frac{\sum_{i=1}^{n}\left( y_i - \alpha - x_i \beta \right)^2}{2}\right)
+\end{align*}
+Recognizing that $\sigma^2 \vert \bm{y}, \alpha, \beta$ is an inverse gamma random variable, we have $\sigma^2 \vert \bm{y}, \alpha, \beta \sim \mathcal{IG}\left ( \frac{n}{2}, \frac{1}{2}\sum_{i=1}^{n} \left( y_i - \alpha - x_i \beta \right)^2 \right)$.
+
+\paragraph{(b)}
+Both conditional and marginal posterior distribution for $\sigma^2$ follows inverse gamma distribution. The scale parameter of the conditional posterior distribution $\pi(\sigma^2 \vert \bm{y}, \alpha, \beta)$ depends on the given $\alpha$ and $\beta$, while its counterpart is computed based on the maximum likelihood estimations of $\alpha$ and $\beta$. 
