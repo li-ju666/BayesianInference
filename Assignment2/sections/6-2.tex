@@ -59,7 +59,7 @@ We have $\mathbb{E}_{p(y \vert \bm{\theta})} y = \alpha + x\beta$. Then the Fish
 \end{align*}
 The Jeffreys prior is given by 
 \begin{align*}
-    \pi_{\mathrm{Jeff}} \propto \sqrt{\det (I(\theta))} \propto \sqrt{ \frac{1}{\sigma^8} }= \frac{1}{\sigma^4}
+    \pi_{\mathrm{Jeff}}(\alpha, \beta, \sigma^2) \propto \sqrt{\det (I(\theta))} \propto \sqrt{ \frac{1}{\sigma^8} }= \frac{1}{\sigma^4}
 \end{align*}
 
 Further, we assume the independence of $(\alpha, \beta)$ and $\sigma^2$ as $\pi^{\mathrm{ind}}(\alpha, \beta, \sigma^2) = \pi^{\mathrm{ind}}(\alpha, \beta) \pi^{\mathrm{ind}}(\sigma^2)$. Then we have
@@ -105,7 +105,10 @@ Hence, we have
     \pi(\beta \vert \bm{y}, \sigma^2)
     &= \int \pi(\alpha, \beta \vert \bm{y}, \sigma^2) d\alpha
 \end{align*}
-Then we have $\beta \vert \bm{y}, \sigma^2 \sim \mathcal{N}(\hat{\beta}, \frac{\sigma^2}{n})$.
+Then we have 
+\begin{align*}
+\beta \vert \bm{y}, \sigma^2 \sim \mathcal{N}(\hat{\beta}, \frac{\sigma^2}{n})    
+\end{align*}
 
 (iii). For $\pi(\beta \vert \bm{y}, \alpha, \sigma^2)$, we have
 \begin{align*}
@@ -119,7 +122,10 @@ Then we have $\beta \vert \bm{y}, \sigma^2 \sim \mathcal{N}(\hat{\beta}, \frac{\
         -\frac{1}{2} \frac{( \beta - \frac{\sum_{i=1}^n x_i(y_i-\alpha)}{\sum_{i=1}^n x_i^2})^2}{\frac{\sigma^2}{\sum_{i=1}^n x_i^2}}
         \right\}
 \end{align*}
-Then we have $\beta \vert \bm{y}, \alpha, \sigma^2 \sim \mathcal{N}(\frac{\sum_{i=1}^n x_i(y_i-\alpha)}{\sum_{i=1}^n x_i^2}, \frac{\sigma^2}{\sum_{i=1}^n x_i^2})$.
+Then we have 
+\begin{align*}
+\beta \vert \bm{y}, \alpha, \sigma^2 \sim \mathcal{N}(\frac{\sum_{i=1}^n x_i(y_i-\alpha)}{\sum_{i=1}^n x_i^2}, \frac{\sigma^2}{\sum_{i=1}^n x_i^2})    
+\end{align*}
 
 (iv). For $\pi(\alpha, \beta, \sigma^2 \vert \bm{y})$, we have
 \begin{align*}
@@ -131,7 +137,10 @@ With Theorem 6.7, we have
     \alpha, \beta, \sigma^2 \vert \bm{y} \sim \mathcal{NIG}(n-2, \sum_{i=1}^{n}\left( y_i - \hat{\alpha}_{\mathrm{MLE}} - x_i \hat{\beta}_{\mathrm{MLE}} \right)^2, (\hat{\alpha}_{\mathrm{MLE}}, \hat{\beta}_{\mathrm{MLE}})^{\top}, \Sigma^{-1})
 \end{align*}
 
-With the properties of normal inverse gamma distribution, we have $ \sigma^2 \vert \bm{y} \sim \mathcal{IG}\left( \frac{n}{2}-1, \frac{1}{2}\sum_{i=1}^{n}\left( y_i - \hat{\alpha}_{\mathrm{MLE}} - x_i \hat{\beta}_{\mathrm{MLE}} \right)^2 \right) $
+With the properties of normal inverse gamma distribution, we have 
+\begin{align*}
+  \sigma^2 \vert \bm{y} \sim \mathcal{IG}\left( \frac{n}{2}-1, \frac{1}{2}\sum_{i=1}^{n}\left( y_i - \hat{\alpha}_{\mathrm{MLE}} - x_i \hat{\beta}_{\mathrm{MLE}} \right)^2 \right)  
+\end{align*}
 
 (v). Similarly for $\pi(\alpha, \beta \vert \bm{y})$, we have
 \begin{align*}

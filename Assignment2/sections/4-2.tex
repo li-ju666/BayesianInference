@@ -46,11 +46,21 @@ Recall that the median of $\mathrm{Beta}(a, b)$ is approximately given by $\frac
 The use of asymmetric loss is advantageous when the repercussions of overestimation differ significantly from those of underestimation. By allocating larger coefficients to the components that could lead to more serious consequences, the frequency of such adverse outcomes may be diminished. An real-life example is medical diagnosis, in which the use of an asymmetric loss function is crucial because the costs of false negatives and false positives are highly imbalanced. 
 
 \paragraph{(d)}
-The risk for estimator $\hat{\theta}$ given $\theta_0$ is defined as
+In Bayesian decision theory, achieving a constant risk means that the expected loss incurred by the decision rule is constant regardless of the true value of the parameter $\theta$. This is desirable because it ensures a consistent performance of the decision rule across different parameter values.
+
+In this particular case it is very difficult to prove or disprove existence of such choice of prior that would yield constant risk. To illustrate the problem faced, we begin by recalling that the risk for an estimator $\hat{\theta}$ given $\theta_0$ is defined as
+
 \begin{align*}
     R(\theta_0, \hat{\theta}) 
-    &\coloneqq \mathbb{E}_{p(X \vert \theta_0)} L(\theta_0, \hat{\theta})\\
-    &= \sum_{x=0}^{n} L(\theta_0, \hat{\theta}) \begin{pmatrix} n \\ x \end{pmatrix} \theta_0^{x} (1-\theta_0)^{n-x}
+    &\coloneqq \mathbb{E}_{p(x \vert \theta_0)} L(\theta_0, \hat{\theta}) = \int_\mathcal{X} L(\theta_0, \hat{\theta}) p(x|\theta_0) dx
 \end{align*}
 
-{\color{red} tobecontinued}
+Since the loss function under consideration is asymmetric we split the above integral into two parts i.e.
+
+\begin{align*}
+    R(\theta_0, \hat{\theta}) 
+    &= \int_{\substack{x \in \mathcal{X} \\ \theta_0 > \hat{\theta}}} L(\theta_0, \hat{\theta}) p(x|\theta_0) dx + \int_{\substack{x \in \mathcal{X} \\ \theta_0 < \hat{\theta}}} L(\theta_0, \hat{\theta}) p(x|\theta_0) dx \\
+    &= k_2 \int_{\substack{x \in \mathcal{X} \\ \theta_0 > \hat{\theta}}} (\theta_0 - \hat{\theta}) \begin{pmatrix} n \\ x \end{pmatrix} \theta_0^{x} (1-\theta_0)^{n-x} dx - k_1\int_{\substack{x \in \mathcal{X} \\ \theta_0 < \hat{\theta}}} (\theta_0 - \hat{\theta}) \begin{pmatrix} n \\ x \end{pmatrix} \theta_0^{x} (1-\theta_0)^{n-x} dx 
+\end{align*}
+
+To achieve constant risk is same as to say putting the derivative of above equal to $0$. Computing the derivative for above expression is quite complicated (might not even have a closed form solution). We conjecture that it might not be possible to find a prior that results in constant risk but we do not have formal way to prove it.

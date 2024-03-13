@@ -1,8 +1,8 @@
 \section{Problem 5.1}
-Notation: $\Gamma(a, b)$ denotes a gamma distribution with parameters $a$ and $b$, and $\Gamma(z)$ denotes a gamma function w.r.t $z$.
+Notation: $\Gamma(a, b)$ denotes a gamma distribution with parameters $a$ and $b$, and $\Gamma(z)$ denotes a gamma function over $z$.
 
 \paragraph{(a)}
-Given the model $X \vert \theta \sim \mathrm{Exp}(\theta)$ and priot $\theta \sim \Gamma(\alpha, \beta)$, we have the posterior distribution of $\theta$ given an i.i.d. sample $\bm{x}_{(n)} = (x_1, \dots, x_n)$
+Given the model $X \vert \theta \sim \mathrm{Exp}(\theta)$ and prior $\theta \sim \Gamma(\alpha, \beta)$, we have the posterior distribution of $\theta$ given an i.i.d. sample $\bm{x}_{(n)} = (x_1, \dots, x_n)$
 \begin{align*}
     \pi(\theta \vert \bm{x}_{(n)}) &\propto p(\bm{x}_{(n)} \vert \theta) \pi(\theta) \\
     &= \prod \mathrm{Exp}(\theta) \Gamma(\alpha, \beta)\\
@@ -25,4 +25,27 @@ With $L_2$ loss, the Bayes estimator for $\theta$ is given by
 \end{align*}
 
 \paragraph{(c)}
-{\color{red} tobecontinued}
+\begin{proof}
+First we show the strong consistency of the posterior $\pi(\theta \vert \bm{x}_n)$. With a fixed $n$, the expectation and variance of the posterior are given by
+\begin{align*}
+    \mathbb{E}_{\pi(\theta \vert \bm{x}_n)} [\theta]
+    &= \frac{n+\alpha}{\beta + \sum_{i=1}^n x_i} \\
+    \mathbb{V}_{\pi(\theta \vert \bm{x}_n)} [\theta]
+    &= \frac{n+\alpha}{(\beta + \sum_{i=1}^n x_i)^2}
+\end{align*}
+The strong law of large numbers yields $\sum_{i}^{n}x_i \rightarrow n\mathbb{E} [X] \mathrm{a.s.}$ for $n\rightarrow \infty$. With $\mathbb{E}_{p(X \vert \theta)}[X] =\frac{1}{\theta} $ and $\mathbb{V}_{p(X \vert \theta)} = \frac{1}{\theta^2}$ then we have
+\begin{align*}
+    \lim_{n\rightarrow\infty} \mathbb{E}_{\pi(\theta \vert \bm{x}_n)} [\theta]
+    &= \lim_{n\rightarrow\infty}  \frac{n+\alpha}{\beta + \sum_{i=1}^n x_i} \\
+    &= \lim_{n\rightarrow\infty} \frac{n+\alpha}{\beta + \frac{n}{\theta}} \\
+    = \theta\\
+    \lim_{n\rightarrow\infty} \mathbb{V}_{\pi(\theta \vert \bm{x}_n)} [\theta]
+    &= \lim_{n\rightarrow\infty} \frac{n+\alpha}{(\beta + \sum_{i=1}^n x_i)^2}\\
+    &= \lim_{n\rightarrow\infty} \frac{n+\alpha}{\beta^2 + 2\beta \sum_{i=1}^n x_i + (\sum_{i=1}^n x_i)^2}\\
+    &= \lim_{n\rightarrow\infty} \frac{n+\alpha}{\beta^2 + \frac{2n\beta}{\theta} + \frac{n^2}{\theta^2} + \frac{n^2}{\theta^2}}\\
+    &= 0
+\end{align*}
+
+Then with a prior $\theta \sim \Gamma(\alpha, \beta)$, which has a support over all positive real numbers and an $L_2$ loss function, which has an unique minimum at $\theta$, using Theorem 5.1, we ensure that the Bayes estimator $\delta(\bm{x}_{(n)}) = \frac{n+\alpha}{\beta + \sum_{i=1}^n x_i}$ is consistent.
+
+\end{proof}

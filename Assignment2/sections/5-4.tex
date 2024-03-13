@@ -23,23 +23,35 @@ For prior $\pi_1, \pi_2: \theta \sim \Gamma(\alpha_1, \beta), \theta \sim \Gamma
         \right) d\theta\\
     &= (\alpha_0 - \alpha_1)\ln (\sum_{i=1}^{n}X_i + \beta) +
         \ln \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_0)} +
-        (\alpha_0 - \alpha_1) \mathbb{E}_{\pi^n_1} [\theta]\\
+        (\alpha_0 - \alpha_1) \mathbb{E}_{\pi^n_1} [\ln \theta]\\
     &= (\alpha_0 - \alpha_1)\ln (\sum_{i=1}^{n}X_i + \beta) +
         \ln \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_0)} +
-        (\alpha_0 - \alpha_1) \frac{n\nu + \alpha_0}{\sum_{i=1}^{n}X_i + \beta}
+        (\alpha_0 - \alpha_1) (\psi(n\nu+\alpha_0) - \ln(\sum_{i=1}^{n}X_i + \beta))\\
+    &= \ln \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_0)} + (\alpha_0 - \alpha_1) \psi(n\nu+\alpha_0)
 \end{align*}
-The strong law of large numbers yields $\sum_{i}^{n}Y_i \rightarrow n\mathbb{E} [Y] \mathrm{a.s.}$ for $n\rightarrow \infty$. Thus we have
+where $\psi(x)$ is the digamma function. 
+
+The strong law of large numbers yields $\sum_{i}^{n}Y_i \rightarrow n\mathbb{E} [Y] \mathrm{a.s.}$ for $n\rightarrow \infty$. Also for digamma function $\psi(x)$, we have $\psi(x) \sim \ln x - \frac{1}{2x}$ for $n\rightarrow \infty$. Thus we have
 \begin{align*}
     &\lim_{n\rightarrow\infty} \mathrm{KL}\left( \pi_1^{n}(\theta \vert \bm{X}) \Vert \pi_2^{n}(\theta \vert \bm{X})\right)\\
-=\ & \lim_{n\rightarrow\infty} (\alpha_0 - \alpha_1)\ln (\sum_{i=1}^{n}X_i + \beta) +
+=\ & \lim_{n\rightarrow\infty} (\alpha_0 - \alpha_1)
         \ln \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_0)} +
-        (\alpha_0 - \alpha_1) \frac{n\nu + \alpha_0}{\sum_{i=1}^{n}X_i + \beta}\\
-=\ & \lim_{n\rightarrow\infty} (\alpha_0 - \alpha_1) \ln(n\nu + \beta) + 
-    \ln \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_0)} + (\alpha_0 - \alpha_1) \ln \frac{n\nu+\alpha_0}{n\nu+\beta}\\
-=\ & \lim_{n\rightarrow\infty} \ln \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_0)} (n\nu + \beta)^{\alpha_0 - \alpha_1}\\
-=\ & \lim_{n\rightarrow\infty} \ln \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_1)(n\nu+\alpha_1)^{\alpha_0 - \alpha_1}} (n\nu + \beta)^{\alpha_0 - \alpha_1} \quad  \vartriangleright \text{Stirling's Approximation}\\
-=\ & \lim_{n\rightarrow\infty} (\alpha_0 - \alpha_1) \ln \frac{n\nu+\beta}{n\nu+\alpha_1}\\
-=\ &0
+        (\alpha_0 - \alpha_1)\psi(n\nu+\alpha_0)\\
+=\ & \lim_{n\rightarrow\infty} 
+        \ln \frac{\Gamma(n\nu+\alpha_0)(n\nu+\alpha_0)^{\alpha_1 - \alpha_0}}{\Gamma(n\nu+\alpha_0)} + 
+        (\alpha_0 - \alpha_1) \left\{ \ln (n\nu + \alpha_0) - \frac{1}{2(n\nu + \alpha_0)} \right\}\\
+=\ & \lim_{n\rightarrow\infty} 
+        (\alpha_1 - \alpha_0) \ln (n\nu + \alpha_0) + (\alpha_0 - \alpha_1) \ln(n\nu + \alpha_0) 
+        - \frac{\alpha_0 - \alpha_1}{2n\nu + 2\alpha_0}\\
+=\ & \lim_{n\rightarrow\infty} 
+        - \frac{\alpha_0 - \alpha_1}{2n\nu + 2\alpha_0}\\
+=\ & 0
+% =\ & \lim_{n\rightarrow\infty} (\alpha_0 - \alpha_1) \ln(n\nu + \beta) + 
+%     \ln \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_0)} + (\alpha_0 - \alpha_1) \ln \frac{n\nu+\alpha_0}{n\nu+\beta}\\
+% =\ & \lim_{n\rightarrow\infty} \ln \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_0)} (n\nu + \beta)^{\alpha_0 - \alpha_1}\\
+% =\ & \lim_{n\rightarrow\infty} \ln \frac{\Gamma(n\nu+\alpha_1)}{\Gamma(n\nu+\alpha_1)(n\nu+\alpha_1)^{\alpha_0 - \alpha_1}} (n\nu + \beta)^{\alpha_0 - \alpha_1} \quad  \vartriangleright \text{Stirling's Approximation}\\
+% =\ & \lim_{n\rightarrow\infty} (\alpha_0 - \alpha_1) \ln \frac{n\nu+\beta}{n\nu+\alpha_1}\\
+% =\ &0
 \end{align*}
 
 By applying Pinsker's inequality, we have
