@@ -1,0 +1,163 @@
+\section{Reverse $X_T \rightarrow X_0$}
+We are interested in the reverse process $p(X_0 \vert X_{1:T})$. However, without knowing $p(X_0)$, $p(X_0 \vert X_{1:T})$ is intractable. But we can approximate it with another parameterised distribution $q_{\theta}$ which can be factorised as $$
+q_\theta(X_{0:T}) = q_\theta(X_T) \prod_{t=1}^{T} q_\theta(X_{t-1} \vert x_t)
+$$
+
+% With the properties of Gaussian distributions, we know that the reverse step $p(x_{t-1} \vert x_t)$ is also a gaussian but with unknown mean and variance. We want to approximate them with two neural networks $\mu_\phi$ and $\sigma_\psi$: 
+% $$
+% p(x_{t-1} \vert x_t) \approx q(x_{t-1})= \mathcal{N}_{x_{t-1}}(\mu_\phi(x_{t}), \mathrm{diag}(\sigma^2_{\psi}(x_t)))
+% $$
+
+\subsection{Derivation of Variational Lower Bound}
+We want to minimise the KL divergence between two joint distributions $\mathrm{KL}\left(p(X_{0:T}) \Vert q_\theta(X_{0:T}) \right)$. 
+
+\begin{align*}
+    \mathrm{KL}\left(p(X_{0:T}) \Vert q_\theta(X_{0:T}) \right)
+    &= \mathbb{E}_p \left[\ln \frac{p(X_{0:T})}{q_\theta(X_{0:T})} \right] \\
+    &= \mathbb{E}_p \left[\ln \frac{p(X_{1:T}  \vert x_0)}{q_\theta(X_{1:T} \vert x_0)} -\ln q_\theta(X_0) + \ln p(X_0) \right] \\
+    &= \mathbb{E}_{p(X_0)} \left[ \underbrace{
+    \mathbb{E}_{p(X_{1:T} \vert x_0)} \left[\ln \frac{p(X_{1:T}  \vert x_0)}{q_\theta(X_{1:T} \vert x_0)} \right] - \ln q_\theta(X_0)
+    }_{\ell(x_0, \theta)} + \ln p(X_0) \right]
+\end{align*}
+
+The loss expectation w.r.t $p(X_0)$ can be estimated with Monte Carlo methods with the finite samples. Also since $p(X_0)$ is a constant w.r.t $\theta$, we can simply ignore it and focus on term $\ell$.
+
+Further we break the loss function $\ell$ into discrete time steps
+\begin{align*}
+    &\mathbb{E}_{p(X_{1:T} \vert x_0)} \left[\ln \frac{p(X_{1:T}  \vert x_0)}{q_\theta(X_{1:T} \vert x_0)} \right] - \ln q_\theta(X_0)\\
+    =\ & \mathbb{E}_{p(X_{1:T} \vert x_0)} \left[\ln \frac{p(X_{1:T}  \vert x_0)}{q_\theta(X_{0:T})} \right]\\
+    =\ & \mathbb{E}_{p(X_{1:T} \vert x_0)} \left[
+    \sum_{t=2}^{T} \ln \frac{p(X_t \vert x_{t-1})}{q_\theta(X_{t-1} \vert x_t)} + \ln \frac{p(X_1 \vert x_0)}{q_\theta(X_0 \vert x_1)}
+    - \ln q_\theta(X_T)
+    \right] \\
+    =\ &\mathbb{E}_{p(X_{1:T} \vert x_0)} \left[
+    \sum_{t=2}^{T} \ln \frac{p(X_{t-1} \vert x_{t}, x_0) p(X_{t} \vert x_0)}{p(X_{t-1} \vert x_0) q_\theta(X_{t-1} \vert x_t)} + \ln \frac{p(X_1 \vert x_0)}{q_\theta(X_0 \vert x_1)}
+    - \ln q_\theta(X_T)
+    \right] \\
+    =\ &\mathbb{E}_{p(X_{1:T} \vert x_0)} \left[
+    \sum_{t=2}^{T} 
+    \ln \frac{p(X_{t-1} \vert x_{t}, x_0)}{q_\theta(X_{t-1} \vert x_t)} + 
+    \ln \frac{p(X_T \vert x_0)}{p(X_1 \vert x_0)} +
+    \ln \frac{p(X_1 \vert x_0)}{q_\theta(X_0 \vert x_1)}
+    - \ln q_\theta(X_T) 
+    \right] \\
+    =\ &\mathbb{E}_{p(X_{1:T} \vert x_0)} \left[
+    \sum_{t=2}^{T} 
+    \ln \frac{p(X_{t-1} \vert x_{t}, x_0)}{q_\theta(X_{t-1} \vert x_t)} + 
+    \ln \frac{p(X_T \vert x_0)}{q_\theta(X_T)} -
+    \ln q_\theta(X_0 \vert x_1)
+    \right] \\
+    =\ &
+    \underbrace{-\mathbb{E}_{p(X_1 \vert x_0)} \left[ \ln q_\theta(X_0 \vert x_1) \right]}_{\ell_0} +
+    \underbrace{\sum_{t=2}^{T} \mathbb{E}_{p(X_t \vert x_0)} \left[ \mathrm{KL} (p(X_{t-1} \vert x_t, x_0) \Vert q_\theta(X_{t-1} \vert x_t)) \right]}_{\ell_t} + 
+    \underbrace{\mathrm{KL}(
+    p(X_T \vert x_0) \Vert q_\theta(X_T)
+    )}_{\ell_T}
+\end{align*}
+
+
+% Generally, say we have an observed variable $x$ and a latent variable $z$, we want to estimate the posterior $p(z \vert x)$, which is intractable in many cases. Instead, we want to use a parameterised distribution $q_\theta(z)$ to approximate $p(z \vert x)$. In another word, to replace $p(z \vert x)$ with $q_\theta(z)$.
+
+% To quantify the information loss introduced by this replacement, we use $\ell = \mathrm{KL}(q(z) \Vert p(z \vert x))$ to quantify the discrepancy between $q(z)$ and $p(z \vert x)$, and we want it minimised. 
+
+% First we show why it is infeasible to minimise this directly:
+
+% \begin{align}
+% \mathrm{KL}(q(z) \Vert p(z \vert x)) 
+% &= \mathbb{E}_q [\ln \frac{q(z)}{p(z \vert x)}] \\
+% &= \mathbb{E}_q [\ln \frac{q(z) p(x)}{p(x\vert z) p(z)}] \\
+% &= \mathbb{E}_q[\ln \frac{q(z)}{p(z)}] - \mathbb{E}_q[\ln p(x \vert z)] + \ln p(x)
+% \end{align}
+
+% Why can we take $p(x)$ out of the expectation w.r.t. $q$? The integration is taken w.r.t $z$ but not $x$!!!
+
+% Now we notice that $\mathrm{KL}(q(z) \Vert p(z \vert x))$ involves $p(x)$, which is intractable, and thus $\mathrm{KL}(q(z) \Vert p(z \vert x))$ is intractable. 
+
+% But wait, we just want to find a proper $p_\theta(z)$ to minimise $\ell$, and we don't care $p(x)$. To remove the intractable $p(x)$, we can just minus the intractable part and minimise $\mathrm{KL}(q(z) \Vert p(z \vert x)) - \ln p(x)$ right?
+
+% This is exactly *negative* ELBO.
+% $$
+% \begin{align}
+% -\mathrm{ELBO}
+% &= \mathrm{KL}(q(z) \Vert p(z \vert x)) - \ln p(x)
+% = \mathbb{E}_q[\ln \frac{q(z)}{p(z)}] - \mathbb{E}_q[\ln p(x \vert z)] \\
+% &= \mathrm{KL}(q(z) \Vert p(z)) - \mathbb{E}_q[\ln p(x \vert z)]
+% \end{align}
+% $$
+% Additional Note:
+% Why do we call this term Evidence Lower Bound (ELBO)?
+% $$
+% \mathrm{ELBO} = \ln p(x) - \mathrm{KL}(q(z) \Vert p(z \vert x))
+% $$
+% Due to the property that $\mathrm{KL}(q \Vert p) \geq 0$ and the equality holds if.f $p=q$. Also since $\ln p(x) \geq 0$, thus ELBO is literally the lower bound for $\ln p(x)$. When we have the true posterior $p(z \vert x)$ as $q(z)$, then the second term goes 0 and ELBO equals $\ln p(x)$.
+
+% #### Derivation of the Loss function
+% In the context of the diffusion model, thanks to the Markov Chain assumption, the joint distribution $p(x_{0:T})$ can be either factorised as 
+% $$
+% p(x_{0:T}) = p(x_0) p(x_1 \vert x_0) \dots p(x_T \vert x_{T-1})
+% $$
+% or
+% $$
+% p(x_{0:T}) = p(x_0 \vert x_1) \dots  p(x_{T-1} \vert x_T) p(x_T)
+% $$
+
+% We are interested in the reversed factorisation.
+
+% We use $q_\theta(x_{1:T} \vert x_0)$ to approximate $p(x_{1:T} \vert x_0)$ facilitating the reverse conditional distributions. Generally for variational inference, we minimise $\mathrm{KL}(q_\theta \Vert p)$, but here we use $\mathrm{KL}(p \Vert q_\theta)$ and we derive the ELBO:
+% $$
+% \begin{align}
+% \mathrm{KL}(p(x_{1:T} \vert x_0) \Vert q_\theta(x_{1:T} \vert x_0))
+% &= \mathbb{E}_{p(x_{1:T} \vert x_0)} \ln \frac{p(x_{1:T} \vert x_0)}{q_\theta(x_{1:T} \vert x_0)} \\
+% &= \mathbb{E}_{p(x_{1:T} \vert x_0)} \ln \frac{p(x_{1:T} \vert x_0)}{q_\theta(x_{0:T})} + \ln q_\theta(x_0) \\
+% \end{align}
+% $$
+% Then we have the negative ELBO and we need to break it into steps:
+% $$
+% \begin{align}
+% -\mathrm{ELBO}
+% &= \mathrm{KL}(p(x_{1:T} \vert x_0) \Vert q_\theta(x_{1:T} \vert x_0)) - \ln q_\theta(x_0) \\
+% &= \mathbb{E}_{p(x_{1:T} \vert x_0)} \ln \frac{p(x_{1:T} \vert x_0)}{q_\theta(x_{0:T})} \\
+% &= \mathbb{E}_{p(x_{1:T} \vert x_0)} \ln \frac{\prod_{t=1}^{T} p(x_t \vert x_{t-1})}{\prod_{t=1}^{T} q_\theta(x_{t-1} \vert x_t) \cdot q_\theta(x_T)} \\
+% &= \mathbb{E}_{p(x_{1:T} \vert x_0)} \left[ \sum_{t=1}^T \ln \frac{p(x_t \vert x_{t-1})}{q_\theta(x_{t-1} \vert x_t)} - \ln q_\theta(x_T) \right]
+% \end{align}
+% $$
+% Further we derive the reduced variance variational bound:
+% $$
+% \begin{align}
+% L
+% &= \mathbb{E}_{p(x_{1:T} \vert x_0)} \left[ -\sum_{t=1}^T \ln \frac{q_\theta(x_{t-1} \vert x_t) }{p(x_t \vert x_{t-1})} - \ln q_\theta(x_T) \right] \\
+
+% &= \mathbb{E}_{p(x_{2:T} \vert x_0)} \left[ -\sum_{t=1}^T \ln \frac{q_\theta(x_{t-1} \vert x_t) }{p(x_t \vert x_{t-1})} - \ln \frac{q_\theta(x_0 \vert x_1)}{p(x_1 \vert x_0)} - \ln q_\theta(x_T) \right] \\
+
+% &= \mathbb{E}_{p(x_{2:T} \vert x_0)} \left[ -\sum_{t=1}^T \ln \frac{q_\theta(x_{t-1} \vert x_t) }{p(x_{t-1} \vert x_{t}, x_0)}\cdot\frac{p(x_{t-1} \vert x_0)}{p(x_t \vert x_0)} - \ln \frac{q_\theta(x_0 \vert x_1)}{p(x_1 \vert x_0)} - \ln q_\theta(x_T) \right] \\
+
+% &= \mathbb{E}_{p(x_{2:T} \vert x_0)} \left[ -\sum_{t=1}^T \ln \frac{q_\theta(x_{t-1} \vert x_t) }{p(x_{t-1} \vert x_{t}, x_0)} - \ln \frac{q_\theta(x_0 \vert x_1)}{p(x_1 \vert x_0)} - \ln q_\theta(x_T) -\ln \frac{p(x_1 \vert x_0)}{p(x_T \vert x_0)}\right] \\
+
+% &= \mathbb{E}_{p(x_{2:T} \vert x_0)} \left[ -\sum_{t=1}^T \ln \frac{q_\theta(x_{t-1} \vert x_t) }{p(x_{t-1} \vert x_{t}, x_0)} - \ln \frac{q_\theta(x_0 \vert x_1) q_\theta(x_T)}{p(x_T \vert x_0)} \right] \\
+
+% &= \mathbb{E}_{p(x_{2:T} \vert x_0)} \left[ -\sum_{t=1}^T \ln \frac{q_\theta(x_{t-1} \vert x_t) }{p(x_{t-1} \vert x_{t}, x_0)} - \ln \frac{ q_\theta(x_T)}{p(x_T \vert x_0)} - \ln q_\theta(x_0 \vert x_1) \right] \\
+
+% &= \sum_{t=2}^T \mathbb{E}_{p(x_t \vert x_0)} \left[ \mathrm{KL}(p(x_{t-1} \vert x_t, x_0) \Vert q_\theta(x_{t-1} \vert x_t)) \right] + \mathrm{KL}(p(x_T \vert x_0) \Vert q_\theta(x_T)) + \mathbb{E}_{p(x_1 \vert x_0)} \left[\ln q_\theta(x_0 \vert x_1)\right]
+
+% \end{align}
+% $$
+% We can split the loss function $L$ into three terms
+% $$
+% \begin{align}
+% L_0
+% &= \mathbb{E}_{p(x_1 \vert x_0)} \left[\ln q_\theta(x_0 \vert x_1) \right] 
+% \\
+% L_t
+% &= \sum_{t=2}^T \mathbb{E}_{p(x_t \vert x_0)} 
+% 	\mathrm{KL}(p(x_{t-1} \vert x_t, x_0) \Vert q_\theta(x_{t-1} \vert x_t))\\
+% L_T
+% &= \mathrm{KL}(p(x_T \vert x_0) \Vert q_\theta(x_T))
+
+% \end{align}
+% $$
+% Here 
+% 1. $L_T$ is a constant with no parameters and we can ignore it during the optimisation. 
+% 2. $L_t$ is tractable: We assume $q_\theta(x_{t-1} \vert x_t)$ gaussian, and $p(x_{t-1} \vert x_t, x_0) = \frac{p(x_t \vert x_{t-1}) p(x_{t-1} \vert x_0)}{p(x_t \vert x_0)}$, in which all terms are gaussian.
+% 3. $L_0$ is intractable: we handle this later
+
+% #### Parameterisation of $q_\theta(x_{t-1} \vert x_t)$

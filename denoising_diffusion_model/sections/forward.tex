@@ -1,0 +1,28 @@
+\section{Forward $X_0 \rightarrow X_T$}
+We first define the conditional distributions for $X_t$ on $x_{t-1}$ at time step $t$:
+$$
+X_t \vert x_{t-1} \sim \mathcal{N}(X_{t}; \sqrt{a_t}x_{t-1}, (1-a_t) \mathbf{I})
+$$
+where $0< a_t < 1$ is a predefined scalar. The intuition behind this is to remain $a_t$ information from $x_{t-1}$ and add $1-a_t$ noise to the image, to gradually noisify the image.
+
+% To simplify the sequence, we have the following derivations:
+% $$\begin{align}
+% p(x_1 \vert x_0) = \mathcal{N}(\sqrt{a_1}x_0, (1-a_1)\mathbf{I})\\
+% p(x_2 \vert x_1) = \mathcal{N}(\sqrt{a_2}x_1, (1-a_2)\mathbf{I})\\
+% \end{align}
+% $$
+% Then we have 
+% $$
+% p(x_2 \vert x_0) = \mathcal{N}(\sqrt{a_2 a_1}x_0, (1-a_2a_1)\mathbf{I})
+% $$
+Thanks to the properties of Gaussian, we have
+$$
+X_T \vert x_0 \sim \mathcal{N}(X_T; \sqrt{\overline{a}_T}x_0, (1-\overline{a}_T) \mathbf{I})
+$$
+where $\overline{a}_T = \prod_{t=1}^{T} a_t$.
+
+By carefully designing the sequence of $a_t$ such that $\overline{a}_T \approx 0$, we have $X_T \sim \mathcal{N}(X_T; 0, \mathbf{I})$ approximately.
+% This can be interpreted as after continuously adding noise to $x_0$, at time step $T$, the image is expected to be almost isotropic standard gaussian $\mathcal{N}(0, \mathbf{I})$, achieved by $\sqrt{\overline{a}_T} \approx 0$.
+
+% #### Implementation Details:
+% Here for CIFAR10 dataset, we define $T=1000$ and $\overline{\alpha}_t = \cos(\frac{t}{T}\frac{\pi}{2})$

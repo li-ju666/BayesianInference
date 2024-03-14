@@ -1,0 +1,51 @@
+\ProvidesPackage{listy}
+
+% paper geometry
+\usepackage[letterpaper]{geometry}
+\AtBeginDocument{
+  \newgeometry{
+    textheight=9in,
+    textwidth=6.5in,
+    top=1in,
+    headheight=14pt,
+    headsep=25pt,
+    footskip=30pt
+  }
+}
+\usepackage{appendix}
+
+% no indent for any stuff
+\usepackage{parskip}
+
+% define language
+\usepackage[english]{babel}
+
+\usepackage{lipsum}
+
+% math formula packages
+\usepackage{amsmath, amsthm, amsfonts}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{bbm}
+
+% manage figures
+\usepackage{graphicx}
+
+\usepackage{tikz}
+
+% manage pseudo codes
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}[thm]{Lemma}
+
+\usepackage{natbib}
+\bibliographystyle{unsrtnat}
+
+\usepackage{minted}
+
+\usepackage{booktabs}
+
