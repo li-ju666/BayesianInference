@@ -1,0 +1,274 @@
+\documentclass[5pt,a4paper, twocolumn]{article}
+\usepackage[margin=0.5cm]{geometry} % Adjust page margins
+\setlength{\parindent}{0pt}
+\usepackage{microtype} % Improves text appearance
+\usepackage{xcolor}
+\usepackage{amsmath, amsthm, amsfonts, mathtools}
+\usepackage{bm}
+
+
+% \usepackage{enumitem} % For customizing lists
+% \setlist{nosep} % Removes space between list items
+
+
+% Custom commands for convenience
+\newcommand{\topic}[1]{\section*{#1}}
+\newcommand{\subtopic}[1]{\subsection*{#1}}
+\newcommand{\keypoint}[1]{\textbf{#1}}
+
+\newcommand{\warning}[1]{{\color{red}#1}}
+
+\begin{document}
+{\small
+% \maketitle
+\topic{Definitions}
+Shannon Entropy: $H(p) = -\int p(x) \ln p(x) dx$ \\
+Cross Entropy: $H(p, q) = -\int p(x) \ln q(x)$ \\
+Kullback-Leibler Divergence: $\mathrm{KL}(p \Vert q) = \int p(x) \ln \frac{p(x)}{q(x)}dx$ \\
+Mutual Information: $I(X, Y) = \mathrm{KL}(p(X, Y) \Vert p(X)p(Y))$ \\
+Exponential Family: $p(x \vert \theta) = h(x) \exp \left( \sum_{j=1}^k \zeta_j(\theta)T_j(x)\right) C(\theta) = h(x)\exp \left(\eta^\top T(x) - \Psi(\eta) \right)$, where $\eta=\zeta(\theta)$ are called the natural parameters.
+
+\topic{Choice of Priors}
+\subtopic{Subjective Priors}
+Conjugate Priors: If $\mathcal{P}$ is in exponential family in the 2nd form in Section Definitions, the conjugate family over $\Theta$, parameterised by $\mu$ and $\lambda$, is then
+\begin{equation*}
+\mathcal{F} = \{\pi(\theta \vert \mu, \lambda)\} \propto \exp \left(\zeta(\theta)^\top\mu - \lambda \Psi(\zeta(\theta)) \right) \colon \mu\in\mathbb{R}^k, \lambda \in \mathbb{R}^+.
+\end{equation*}
+For $\pi = \pi(\theta \vert \mu_0, \lambda_0)$, the posterior is $\pi(\theta \vert \mu_0 + T(x), \lambda_0 + 1)$.
+
+\subtopic{Non-Informative Priors}
+\begin{itemize}
+    \item Laplace Priors: $\pi(\theta) \propto \text{const}.$ Maximising Shannon entropy $H(\pi) = \sum_{i=1}^n \pi(\theta_i)\ln \pi(\theta_i)$.
+    \item Jeffreys Priors: $\pi(\theta) \propto \sqrt{\det (I(\theta))}$, $I(\theta) \coloneqq -\mathbb{E}_{p(x \vert \theta)} \frac{\partial^2 \ln p(x \vert \theta)}{\partial^2 \theta}$. Derived from parameterisation invariant metric $I_2(p(\cdot \vert \theta_1), p(\cdot \vert \theta_2))\coloneqq \mathrm{KL}(p(\cdot \vert \theta_1), p(\cdot \vert \theta_2)) + \mathrm{KL}(p(\cdot \vert \theta_2), p(\cdot \vert \theta_1)) \approx (\theta_1 - \theta_2)^\top I(\theta) (\theta_1 - \theta_2)$.
+    \item Reference Priors: Information gain is $I(\mathcal{P}, \pi) = \int p(x) \mathrm{KL}(\pi(\cdot \vert x) \Vert \pi(\cdot)) dx$, an "average" gain over all data space $\mathcal{X}$. By rewriting it as $I(\mathcal{P}, \pi) = H(\pi) - \int p(x) H(\cdot \vert x) dx$, we want more information in posterior and less in prior.
+\end{itemize}
+
+\topic{Decision Theory}
+In additional to Bayes model, we have 
+\begin{itemize}
+    \item Decision (space): $d \in \mathcal{D}$. e.g. $\mathcal{D}=\Theta$ for parameter inference, $\mathcal{D}=\mathcal{X}$ for prediction, or $\mathcal{D}=\{0, 1\}$ for testing, etc.
+    \item Decision Rule: $\delta \colon x\in\mathcal{X}\to d=\delta(x)\in\mathcal{D}$.
+    \item Loss Function: $L\colon (\theta, d)\in \Theta \times \mathcal{D} \to L(\theta, d)\in\mathbb{R}$. Here $\theta$ is the true parameter.
+\end{itemize}
+
+\subtopic{Expectations of Loss}
+\begin{itemize}
+    \item Risk: $R(\theta, \delta) \coloneqq \int L(\theta, \delta(x))p(x \vert \theta)dx$
+    \item Bayes Risk $r(\pi, \delta) \coloneqq \int R(\theta, \delta) \pi(\theta) d\theta$ (further integrated over $\pi$)
+    \item Posterior Integrated Loss $\rho(\pi, d \vert x) \coloneqq \int L(\theta, d)\pi(\theta \vert x)d\theta$
+\end{itemize}
+
+\subtopic{Decision Rules}
+\begin{itemize}
+    \item Inadmissible decision rule $\delta$: There exists another rule which is no worse than $\delta$ for all $\theta\in\Theta$, and is strictly better than $\delta$ for at least one $\theta\in\Theta$, measured by risk. (Need to be compared for every $\theta$.)
+    \item Bayesian decision rule $\delta^\pi$: $\delta^\pi$ that minimises the expected risk $\delta^\pi \coloneqq \underset{\delta}{\arg \min}\ r(\pi, \delta)$. (For each $x\in\mathcal{X}$ we can find the decision $d\in\mathcal{D}$ using $\delta^{\pi}(x) = \underset{d}{\arg\min} \rho(\pi, d \vert x)$).
+    \item Minimax decision rule $\delta^\star$: $\delta^\star$ that minimises the maximum risk for $\theta \in \Theta$, where $\delta^\star$ is searched within the expanded randomised decision rule space. 
+\end{itemize}
+
+\subtopic{Bridges between Frequentist and Bayesian}
+\begin{itemize}
+    \item Bayes estimators are admissible under (reasonable) conditions: 1. $\pi$ does not exclude any $\theta$; 2. $r(\delta, \pi)$ for all $\delta$ are bounded; 3. $R(\theta, \delta)$ is continuous for $\theta \in \Theta$.
+    \item Bayes estimator associated with the \emph{least favourable prior} $\pi_0$, which is defined by $\underset{\pi}{\sup}\ r(\pi)=r(\pi_0)$, is a minimax estimator.
+    \item If Bayes rule $\delta^\pi$ has a constant risk $R(\theta, \delta^\pi)=\text{const.}$, $\delta^\pi$ is minimax. 
+
+\end{itemize}
+
+\topic{Asymptotic Theory}
+\keypoint{Strong Consistency} Assume a Bayes model $\{\mathcal{P}, \pi\}$ and random variable $X_n \sim P^n_{\theta_0}$. The sequence of posteriors $\pi^n(\theta \vert x_n)$ is called strongly consistent at $\theta_0$ iff for any open subset $O\subset \Theta$ with $\theta_0 \in O$ it holds that $\Pr^n(\theta \in O \vert x_n) \to 1$ as $n\to \infty$. (Alternatively we can show this by proving $\mathbb{E}(\theta \vert x_n) = \theta_0$ and $\mathbb{V}(\theta \vert x_n)=0$ as $n\to\infty$) \\
+
+\keypoint{Asymptotic Behaviours of Consistent Priors} Assume $X_n \sim P^n_{\theta_0}$ and two priors $\pi_1$ and $\pi_2$ w.r.t model $\mathcal{P}$ which both have strongly consistent posteriors, then $\underset{A}{\sup}\left\vert \Pr_n^{\pi_1}(A \vert x_n) - \Pr_n^{\pi_2}(A \vert x_n)\right\vert \to 0$ for $n\to\infty$. a.s. Then sup term is called total distribution distance. (Priors with consistent posteriors have identical asymptotic behaviours.)
+
+\topic{Bayesian Linear Model}
+ Model of the form $\mathcal{P}=\{\mathcal{N}_n(\mathbf{X}\beta, \sigma^2\Sigma)\colon \beta\in\mathbb{R}^p, \sigma^2 \in \mathbb{R}^+ \}$ where $\mathbf{X}$ is a matrix of known constants and $\Sigma$ is known. Parameters are $\theta=\{\beta, \sigma^2\}$ or $\theta=\beta$ with $\sigma^2$ known. Also, $\mathbf{X}$ is of full rank: $r(\mathbf{X})=p$.
+
+\subtopic{Conjugate Prior $\pi_c$}
+\textbf{Case 1:} $\theta=\beta$ with $\sigma^2$ known.
+
+Formulation: $\mathbf{y} \vert \theta \sim \mathcal{N}_n (\mathbf{X}\beta, \Sigma), \beta \sim \mathcal{N}_p(\gamma, \Gamma)$
+
+Results:
+\begin{align*}
+\begin{pmatrix}
+\beta \\
+\mathbf{y}
+\end{pmatrix}
+&\sim \mathcal{N}_{n+p}
+\left(
+\begin{pmatrix}
+\gamma \\
+\mathbf{X}\gamma
+\end{pmatrix},
+\begin{pmatrix}
+\Gamma & \Gamma \mathbf{X}^\top \\
+\mathbf{X}\Gamma & \Sigma + \mathbf{X}\Gamma \mathbf{X}^\top
+\end{pmatrix}
+\right) \\
+\mathbf{y} &\sim \mathcal{N}_n(\mu_y, \Sigma_y)\\
+\beta \vert y &\sim \mathcal{N}_p(\mu_{\beta|y}, \Sigma_{\beta \vert y})
+\end{align*}
+where
+\begin{align*}
+\mu_y &= \mathbf{X}\gamma & \mu_{\beta \vert y} &= \gamma + \Gamma \mathbf{X}^\top(\Sigma + \mathbf{X}\Gamma \mathbf{X}^\top)^{-1}(y - \mathbf{X}\gamma) \\
+\Sigma_y &= \Sigma + \mathbf{X}\Gamma \mathbf{X}^\top &
+\Sigma_{\beta \vert y} &= \Gamma - \Gamma \mathbf{X}^\top(\Sigma + \mathbf{X}\Gamma \mathbf{X}^\top)^{-1}\mathbf{X}\Gamma.
+\end{align*}
+
+\textbf{Case 2:} $\theta=\{\beta, \sigma^2\}$
+
+Formulation:
+\begin{align*}
+\sigma^2 &\sim \mathcal{IG}(a/2, b/2)\\
+\beta \vert \sigma^2 &\sim \mathcal{N}_p(\gamma, \sigma^2\Gamma)\\
+\mathbf{y} \vert \beta, \sigma^2 &\sim \mathcal{N}_n(\mathbf{X}\beta, \sigma^2\Sigma)
+\end{align*}
+where $\mathcal{IG}(a/2, b/2)$ denotes inverse gamma distribution with parameters $a/2$ and $b/2$. The prior of $\theta = (\beta, \sigma^2)^\top$ is normal-inverse gamma $\mathcal{NIG}(a, b, \gamma, \Gamma)$.\\
+
+Results:
+
+\emph{Joint posterior:} $(\beta, \sigma^2) \vert y \sim \mathcal{NIG}(a_1, b_1, \gamma_1, \Gamma_1)$ where
+\begin{align*}
+a_1 &= a + n \qquad
+b_1 = b + (y - X\gamma)^\top(\Sigma + X\Gamma X^\top)^{-1}(y - X\gamma) \\
+\gamma_1 &= \gamma + \Gamma X^\top(\Sigma + X\Gamma X^\top)^{-1}(y - X\gamma) \\
+\Gamma_1 &= \Gamma - \Gamma X^\top(\Sigma + X\Gamma X^\top)^{-1}X\Gamma.
+\end{align*}
+
+\emph{Marginal posterior:} For $\pi(\beta \vert \mathbf{y})$ or $\pi(\sigma^2 \vert \mathbf{y})$, use properties of normal-inverse gamma distribution on the joint posterior as below.
+
+\emph{Normal-Inverse Gamma Property:} Assume $(\beta, \sigma^2) \sim \mathcal{NIG}(a, b, \gamma, \Gamma)$, we have $\beta \sim t_p(a, \gamma, b\Gamma/a)$ and $\sigma^2 \sim \mathcal{IG}(a/2, b/2)$, where $t_p$ denotes student-$t$ distribution with degree of freedom $p$.
+
+\emph{Joint $\mathbf{y}$ and $\sigma^2$:} $(\mathbf{y}, \sigma^2)^\top \sim \mathcal{NIG}(a, b, \mathbf{m}, \mathbf{M})$ where $\mathbf{m}=\mathbf{X}\gamma$ and $\mathbf{M}=\Sigma + \mathbf{X}\Gamma\mathbf{X}^\top$.
+
+\subtopic{Jeffreys Prior $\pi_J$}
+We consider $\theta=\{\beta, \sigma^2\}$.
+
+\textbf{Derivation:}
+\begin{equation*}
+I(\theta)=
+\begin{pmatrix}
+\frac{1}{\sigma^2}\mathbf{X}^\top \Sigma^{-1}\mathbf{X} & 0 \\
+0 & \frac{n}{2\sigma^4}
+\end{pmatrix}
+\end{equation*}
+$\pi(\theta) \propto 1/(\sigma^2)^{p/2+1}$ if we assume $\beta$ and $\sigma^2$ are dependent.
+
+$\pi(\theta) \propto 1/\sigma^2$ if $\beta$ and $\sigma^2$ are independent $\pi(\beta, \sigma^2) = \pi(\beta)\pi(\sigma^2)$.
+
+\textbf{Posterior:} The posterior for Jeffreys Prior falls back to the conjugate family:
+
+Under Jeffreys priors $\pi(\beta, \sigma^2) \propto (\sigma^2)^{-m}$  with $2m = p + 2$ or $m = 1$ assuming dependency between $\beta$ and $\sigma^2$ or not. The posterior is then $(\beta, \sigma^2) \vert \mathbf{y} \sim \mathcal{NIG}(a_m, b, \gamma, \Gamma)$ with
+\begin{align*}
+a_m &= 2m + n - p - 2 \\
+b &= (\mathbf{y} - \mathbf{X}\hat{\beta}_{\Sigma})^\top\Sigma^{-1}(\mathbf{y} - \mathbf{X}\hat{\beta}_{\Sigma}) \\
+\gamma &= (\mathbf{X}^\top \Sigma^{-1}\mathbf{X})^{-1}\mathbf{X}^\top \Sigma^{-1}\mathbf{y} = \hat{\beta}_{\Sigma} \text{ (Estimation of $\beta$)}\\
+\Gamma &= (\mathbf{X}^\top \Sigma^{-1}\mathbf{X})^{-1}
+\end{align*}
+Additionally, if $\Sigma=\mathbf{I}_n$, $\hat{\beta}_\Sigma$ is identical to the least-square solution.
+
+\topic{Parameter Estimation}
+Maximum Likelihood Estimator (MLE): $\hat{\theta}_{\text{MLE}}(x) = \underset{\theta\in \Theta}{\arg \max} \ell(\theta \vert x)$.
+
+\subtopic{Maximum a Posteriori (MAP) Estimator}
+$\hat{\theta}_{\text{MAP}} = \underset{\theta\in\Theta}{\arg\max}\pi(\theta \vert x)$
+\begin{itemize}
+    \item Make estimation with the mode of the posterior
+    \item Enough to know the kernel only $\pi(\theta \vert x)\propto \pi(\theta)\ell(\theta \vert x)$
+\end{itemize}
+
+\keypoint{Connections between MAP and MLE}
+For a linear model $y=X\beta + \epsilon$ with parameter $\theta=\beta\in\mathbb{R}^p$, by rearranging $\hat{\theta}_{\text{MAP}} = \underset{\theta\in\Theta}{\arg\max}\left[ \ln\ell(\theta \vert x)+ \ln\pi(\theta) \right]$, we have $\hat{\theta}_{\text{MAP}}$ is equivalent to the regularised MLE: $\ln \pi(\theta) = \text{Pen}(\theta) + \text{const.}$. If $\pi(\theta)$ is flat/constant, $\hat{\theta}_{\text{MAP}} = \hat{\theta}_{\text{MLE}}$.
+
+\subtopic{Bayes Rules Estimator}
+\begin{itemize}
+    \item $\hat{\theta}_{L2} = \mathbb{E}_{\pi(\theta \vert x)}\theta$: Minimise $L_2$ loss.
+    \item $\hat{\theta}_{L_1} = \text{Median}_{\pi(\theta \vert x)}(\theta)$: Minimise $L_1$ loss.
+\end{itemize}
+For symmetric single mode posterior, $\hat{\theta}_{L2}=\hat{\theta}_{L1}$.
+
+\subtopic{Credible Sets}
+Plays the similar rule as the confidence interval, to quantify the precision of the estimation.
+\begin{itemize}
+    \item A set $C_x$ is an $\alpha$-credible region iff $\Pr(\theta_0 \in C_x \vert x) \geq 1-\alpha, \alpha\in[0, 1]$.
+    \item The region is Highest Posterior Density $\alpha$-credible region iff if can be written as $\{\theta \colon \pi(\theta \vert x) > k_\alpha\} \subset C_x \subset \{\theta \colon \pi(\theta \vert x) \geq k_\alpha\}$ where $k_\alpha$ is the largest bound.
+(Intuitively, HPD: The $\alpha-$credible region with the shortest interval)
+\end{itemize}
+
+\topic{Predictions}
+We assume a Bayes model $\{\mathcal{P}, \pi\}$ which has the posterior $\pi(\theta \vert x)$.The future data $x_f$ is generated by distribution $Q_\theta$ with probability function $q(x_f \vert \theta, x)$. Note generally $q(x_f \vert \theta, x)=q(x_f \vert \theta)$ unless it is auto-regressive, future data depending on history data.
+
+\begin{enumerate}
+    \item Define the prediction error $L_{\text{pred}}(x_f, d)$ for a pair of future data point $x_f$ and prediction/decision $d$. Note: It is not the loss function.
+    \item Loss function is given by $L(\theta, d) = \int L_{\text{pred}}(x_f, d)q(x_f \vert \theta, x)d x_f$.
+    \item We get standard risk $R(\theta, \delta)$, Bayes risk $r(\delta, \pi)$, integrated posterior loss $\rho(d, \pi \vert x)$. 
+    \item By minimising Bayes risk we obtain the Bayes predictor, which can be practically obtained from the integrated posterior loss.
+\end{enumerate}
+
+Interestingly, we have 
+\begin{align}
+\rho(d, \pi \vert x) &= \iint L_{\text{pred}}(x_f, d)q(x_f \vert \theta, x)\pi(\theta \vert x)d\theta dx_f \\
+& \int L_{\text{pred}}(x_f, d) \underbrace{\int q(x_f \vert \theta, x)\pi(\theta \vert x)d\theta}_{\text{predictive distribution } \pi(x_f \vert x)} dx_f
+\end{align}
+
+\begin{itemize}
+    \item Predictive distribution $\pi(x_f \vert x)$ is the main tool for predictions: Point estimation and prediction region (similar to HPD credible region) are both base on $\pi(x_f \vert x)$.
+    \item Similarly, using $L_1$ error for $L_{\text{pred}}$ we have $\text{Median}_{\pi(x_f \vert x)}(x_f)$ as the bayes estimator, and using $L_2$ error leads to $\mathbb{E}_{\pi(x_f \vert x)}x_f$.
+\end{itemize}
+
+\topic{Model Testing}
+Combine two models together with the indicator parameter $k$.
+Consider Bayes models $\mathcal{P}_i = \{P^i_{\theta_i}(x) \colon \theta_i\in\Theta_i\}$ with prior $\pi_i$ for $i\in\{0,1\}$. The common model is $\mathcal{P}_m = \{(1-k)P^0_{\theta_0}(x) + kP^1_{\theta_1}(x) \colon \theta_m \coloneqq (k, \theta_0, \theta_1) \in\{0\}\times\Theta_0\times\emptyset \cup \{1\}\times\emptyset \times \Theta_1\}$ with mixed prior $\pi_m(\theta_m)=\pi_k(k=0)\pi_0(\theta_0) + (1-\pi_k(k=1))\pi_1(\theta_1)$.
+
+Interested in $k$, we have the posterior $\Pr(k=i \vert x) = \frac{\Pr(k=i) p(x=i \vert k=)}{\Pr(k=0)p(x \vert k=0) + \Pr(k=1)p(x \vert k=1)}$ for $i\in\{0,1\}$. Essentially we are interested in the evidence of each model $p(x \vert k=i)=\int \ell(\theta_i \vert x)\pi_i(\theta_i)d\theta_i$ for $i\in\{0,1\}$. We call the ratio of the evidences *Bayes Factor* $p(x \vert k=0) / p(x \vert k=1)$.
+
+
+\topic{Lazy Mathematicians' Methods}
+All you need is posterior.
+\subtopic{Integration}
+\keypoint{Independent Monte Carlo Integration} To integrate $\mathbb{E}_{p(\theta)}m(\theta) = \int m(\theta) p(\theta)d\theta$.
+
+\begin{enumerate}
+    \item Draw samples from $p(\theta)$ as $\{\theta_{(1)}, \dots, \theta_{(N)}\}$.
+    \item $\hat{\mathbb{E}}_{p(\theta)} m(\theta) = \frac{1}{N}\sum_{i=1}^N m(\theta_{i})$.
+\end{enumerate}
+
+\subtopic{Sampling}
+We want to sample $p(\theta)$ with only access to its kernel $p(\theta) \propto k(\theta)$.
+
+\keypoint{Importance Sampling} Rewrite the integration $p(\theta)=\text{Normalise}(g(\theta)\frac{k(\theta)}{g(\theta)})$.
+\begin{enumerate}
+    \item Sample form $g(\theta)$ as $\{\theta_1, \dots, \theta_N\}$.
+    \item Calculate associated importance weights $w_i=\frac{k(\theta_i)}{g(\theta_i)}$ for $i\in[N]$.
+    \item Standardise the importance weights $w^s_i = \frac{w_i}{\sum_{i=1}^N w_i}$.
+    \item Obtain weighted samples with weights: $\{(\theta_i, w^s_i)\}^N_{i=1}$.
+\end{enumerate}
+
+With weighted samples, one can
+\begin{itemize}
+    \item integrate $\int m(\theta)p(\theta) \approx \sum_{i=1}^N m(\theta_i)w_i^s$.
+    \item resample from $\{\theta_i\}^N_{i=1}$ with corresponding probabilities $\{w_i^s\}_{i=1}^N$, resulting unweighted samples from $p(\theta)$ directly as $\{\nu_i, \dots, \nu_M\}$.
+\end{itemize}
+Note: Brute-force is a special case of importance sampling, with $g(\theta) \propto \text{const.}$.
+
+\keypoint{Rejection Algorithm}
+\begin{enumerate}
+    \item For $g(\theta)$, pick a constant $M$ s.t. $Mg(\theta) \geq k(\theta)$ for all $\theta\in\Theta$.
+    \item Sample from $g(\theta)$ as $\{\theta_1, \dots, \theta_N\}$.
+    \item Accept $\theta_i$ with probability $\Pr_i(\text{accept})=\frac{k(\theta_i)}{Mg(\theta_i)}$.
+\end{enumerate}
+
+\keypoint{MCMC (Metropolis-Hastings)}
+For $i\in[N]$:
+\begin{enumerate}
+    \item Draw $\nu$ from $T(\theta_{i+1} \vert \theta_i)$.
+    \item Compute acceptance criteria $r(\nu, \theta_{i}) = \frac{k(\nu)T(\nu \vert \theta_{i})}{k(\theta_i)T(\theta_i \vert \nu)}$.
+    \item $\theta_{i+1}=\nu$ with $\Pr_i(\text{accept})=r(\nu, \theta_i)$.
+\end{enumerate}
+
+\keypoint{Approximate Bayesian Computation (ABC)} Not even kernel! We can only generate data from $p(x \vert \theta)$ for $\theta \in \Theta$. 
+\begin{enumerate}
+    \item Generate $\theta$ from $\pi$ and generate $x_{\text{new}}$.
+    \item Accept it if $d(S(x_{\text{new}}), S(x))$ is small enough, where $S(\cdot)$ denotes sufficient statistics and $d$ denotes a metric.
+\end{enumerate}
+
+}
+\end{document}
